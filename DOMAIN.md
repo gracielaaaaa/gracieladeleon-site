@@ -9,7 +9,8 @@ Nothing here has been done yet. The site is only on a protected Vercel preview u
 3. In `public/robots.txt`, change `Disallow: /` to `Allow: /`.
 4. In Vercel: Project, Settings, Environment Variables, add `PUBLIC_ALLOW_INDEXING` = `true` for Production. This removes the `noindex` tag.
 5. In Vercel: Project, Analytics, click Enable (Web Analytics; no cookies, so no banner needed).
-6. Run `npm run build` locally (it runs the em dash and banned-terms check), then merge `preview` into `main` and push.
+6. In Vercel: Project, Settings, Deployment Protection. Vercel Authentication is currently set to **All Deployments**, which also locks `gracieladeleon-site.vercel.app` (with the looser default, that address was public). Once the custom domain is attached and you are ready to launch, change it to **Standard Protection** so gracieladeleon.com is public and previews stay private.
+7. Run `npm run build` locally (it runs the em dash and banned-terms check), then merge `preview` into `main` and push.
 
 ## 2. Add the domain in Vercel
 
