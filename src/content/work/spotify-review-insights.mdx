@@ -5,33 +5,90 @@ fig: "$7.62"
 figLabel: "total model spend"
 order: 3
 featured: true
-status: stub
+status: full
 area: "Evals at scale"
-lede: "A product team with 18 months of app reviews needs to pick next quarter's focus, and needs numbers it can trust. I built a pipeline that classified 237,939 reviews for $7.62, with code checking every number in the final memo."
-ledeMark: "code checking every number in the final memo"
-description: "A multi-agent pipeline that turned 660K app reviews into one ranked product recommendation for $7.62, with a blind verifier and code-checked numbers."
+lede: "A product team with 18 months of app reviews has to pick next quarter's focus, and needs numbers it can trust. I built a pipeline that classified 237,939 reviews for $7.62 and wrote a recommendation in which code checks every number the model writes."
+ledeMark: "code checks every number the model writes"
+description: "A multi-agent pipeline that turned 660K Spotify app reviews into one ranked product recommendation for $7.62, with a blind verifier and code-checked numbers."
 facts:
   - { k: "Role", v: "PM and builder" }
-  - { k: "When", v: "Fall 2026, class project" }
-  - { k: "Built with", v: "Claude, Postgres, Vercel" }
+  - { k: "When", v: "Oct 2026, class project" }
+  - { k: "Built with", v: "Claude Haiku and Sonnet, Postgres" }
   - { k: "Measures", v: "Label quality, cost" }
 ---
 import Section from "../../components/Section.astro";
 import Pending from "../../components/Pending.astro";
+import SpotifyDiagram from "../../components/SpotifyDiagram.astro";
 
-<Section title="Headline facts" fig="86%" figLabel="topic agreement on a hand-labeled set">
-- 660,622 reviews ingested; 237,939 classified.
-- Golden set of 50 reviews I labeled blind: 86% topic, 94% intent, 86% severity agreement.
-- A blind second model checked a sample of 781 labels (83.7% topic agreement).
-- 8 of 8 prompt-injection cases resisted; 20 of 20 planted errors caught.
-- $7.62 total model spend; warm reruns cost $0.
-- No real users: the product lead is a course scenario.
+<div class="video"><div><b>90-second demo</b>The dashboard, one review traced from raw text to a cited number in the memo. <Pending what="recording" /></div></div>
+
+<Section title="Problem" fig="660,622" figLabel="reviews, May 2022 to Nov 2023">
+A product lead has 18 months of Spotify app-store reviews and one question: where should next quarter's effort go? Access, usability, playback, or billing and support?
+
+The hard part is not reading reviews. It is producing counts a leadership team can act on: labels that hold up when someone checks them, a ranking anyone can reproduce, and a memo whose numbers are actually in the data. All of it inside a budget of about $10 in model spend.
+
+<p class="note">The product lead is a course scenario (a Berkeley MBA assignment). There were no real users; the rigor is the point.</p>
 </Section>
 
-<Section title="Full case study">
-Problem, decisions, and before and after: <Pending what="write-up" />
+<Section title="How it works" fig="1" figLabel="larger-model call in the whole run">
+<SpotifyDiagram />
+
+A small model reads each review in bulk and labels topic, intent, severity, and an exact supporting quote. A second small model, with a separate prompt that never sees the first label, re-labels a random 1% sample. Code then groups complaints into issues, ranks them, and builds a claims table. One larger-model call writes the memo from those aggregates only, and code rejects the memo if any number or review ID does not match a claim.
+
+<p class="note">Code owns dedupe, caching, validation, grouping, arithmetic, ranking, and the spend cap. Models only do the reading and the writing.</p>
+</Section>
+
+<Section title="My role" fig="50" figLabel="reviews I labeled by hand">
+**I decided:** to cap the run at the first 100,000 reviews (approved by the instructor) to stay inside the budget; that code owns all arithmetic and the model only writes language; the model split (small model to classify and verify, one larger-model call for the memo); a claim ID on every number in the memo; and the golden set, 50 reviews I labeled on paper.
+
+**AI built:** the pipeline, checkers, cost calculator, and dashboard, to my specs and under my review.
+</Section>
+
+<Section title="Decisions and trade-offs" fig="$9" figLabel="hard spend cap, enforced in code">
+**Coverage or cost.** Classifying every row would have cost about $40 at measured rates, four times the budget. I classified the first 100,000 reviews, then let exact-text reuse complete every identical review elsewhere in the file: 237,939 classified (36% of rows) for $7.62. Every one of the 660,622 rows is accounted for, and the unclassified ones are labeled as out of scope, not silently dropped.
+
+**Trust by checking, not by asking.** One model grading its own labels proves little. A blind second model re-labeled a sample, code compared the two, and I planted 20 wrong labels to prove the comparison catches them.
+
+**Severity, not just volume.** The biggest bucket, general criticism, had the most complaints and nothing actionable in it. Ranking by complaints times mean severity put specific, fixable issues on top.
+</Section>
+
+<Section title="Before and after" fig="0" figLabel="finished reviews re-sent after an interrupt">
+<div class="ba">
+  <div><span class="was">Full run estimated at about $40, over a $10 budget</span><span class="arrow">→</span><span class="now">100K scope plus exact-text reuse: 237,939 labels for $7.62</span></div>
+  <div><span class="was">A bug re-sent invalid items more than once</span><span class="arrow">→</span><span class="now">Exactly one retry, then a fallback or quarantine</span></div>
+  <div><span class="was">First resume test never interrupted (background jobs ignore Ctrl-C)</span><span class="arrow">→</span><span class="now">Real interrupt at 455 done, resumed to 999, 0 re-sent</span></div>
+  <div><span class="was">Paywall and ads ranked as two ordered issues</span><span class="arrow">→</span><span class="now">Verifier exposed a billing vs usability boundary, so the memo pairs them</span></div>
+</div>
+</Section>
+
+<Section title="Results" fig="86%" figLabel="topic agreement with my labels">
+- 660,622 rows ingested and accounted for; 237,939 classified.
+- Agreement with my 50 hand labels: 86% topic, 94% intent, 86% severity.
+- Blind verifier on a 781-review sample: 83.7% topic agreement. The largest disagreement, billing versus usability, became a caveat in the memo.
+- 8 of 8 prompt-injection reviews resisted; 20 of 20 planted errors caught.
+- $7.62 billed in total, within 1 cent of the pipeline's own ledger. A 100-review rerun costs $0 once cached.
+</Section>
+
+<Section title="What the data says" fig="15,879" figLabel="paywall and ads complaints, together">
+Lead with the free tier: basic controls locked behind premium, scoped together with ad load. Whether the boundary cases count as billing or usability, those two issues lead, and the product action is the same. Playback crashes are the strongest second focus: fewer complaints, but higher severity (3.64 on a 1 to 5 scale). Login failures are the most severe per complaint and small enough for a targeted fix.
+</Section>
+
+<Section title="If I were the PM at Spotify" fig="Test" figLabel="paywall complaints may be by design">
+Paywall and ad complaints may describe the business model working as intended, so I would not "fix" them on review volume alone. I would test which locked controls (choosing a song, skipping) drive cancellation language, and run a holdout that unlocks one of them for free users, measuring conversion and retention rather than complaint counts.
+</Section>
+
+<Section title="Limits">
+- 36% of rows are classified; the rest are out of scope by design and excluded from every count.
+- App-store reviews are self-selected and do not represent all users. "I'm cancelling" is stated intent, not observed churn.
+- Severity is model-assigned. My 50 labels are one rater, and I had seen an earlier AI-drafted set before labeling.
+</Section>
+
+<Section title="Next">
+Full coverage with a larger budget, a trend view (is the paywall complaint growing?), and a pricing test proposal for the paywall finding. Live dashboard: <Pending what="database restore" />
 
 <div class="linksrow">
   <a href="https://github.com/gracielaaaaa/spotify-review-insights">Code on GitHub</a>
+  <a href="https://github.com/gracielaaaaa/spotify-review-insights/blob/main/grading/memo.md">Decision memo</a>
+  <a href="https://github.com/gracielaaaaa/spotify-review-insights/blob/main/evals/golden_eval.md">Golden-set eval</a>
 </div>
 </Section>
