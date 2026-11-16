@@ -5,26 +5,63 @@ fig: "15% → 2.8%"
 figLabel: "false positives"
 order: 2
 featured: true
-status: stub
+status: full
 area: "Adoption"
-lede: "As a product manager intern on the AI Platform Telemetry team, I redefined how ServiceNow counts an account as having adopted AI agents, and built the customer-facing AI ROI framework."
-ledeMark: "redefined how ServiceNow counts an account as having adopted AI agents"
-description: "Redefining the AI agent adoption metric across 3K enterprise accounts at ServiceNow, cutting false positives from 15% to 2.8%."
+lede: "As a product manager intern on the AI Platform Telemetry team, I redefined how ServiceNow counts an account as having adopted AI agents. False positives fell from 15% to 2.8%, and the new metric is now used for FY27 planning."
+ledeMark: "False positives fell from 15% to 2.8%"
+description: "Redefining the AI agent adoption metric across 3K enterprise accounts at ServiceNow, cutting false positives from 15% to 2.8%, plus a customer-facing AI ROI framework."
 facts:
-  - { k: "Role", v: "PM intern, AI Platform Telemetry" }
-  - { k: "When", v: "Summer internship" }
+  - { k: "Role", v: "Sr. Data PM intern, AI Platform Telemetry" }
+  - { k: "When", v: "May to Jul 2026" }
   - { k: "Scope", v: "3K enterprise accounts" }
   - { k: "Measures", v: "Adoption, ROI" }
 ---
 import Section from "../../components/Section.astro";
 import Pending from "../../components/Pending.astro";
+import ServiceNowDiagram from "../../components/ServiceNowDiagram.astro";
 
-<Section title="Headline facts" fig="3K" figLabel="enterprise accounts">
-- Redefined the core AI agent adoption metric across 3K enterprise accounts.
-- False positives fell from 15% to 2.8%.
-- Built the customer-facing AI ROI framework.
+<Section title="Problem" fig="15%" figLabel="false positives under the old cutoff">
+Leadership needed to know which enterprise accounts had actually adopted AI agents. The existing metric used one fixed usage cutoff, and 15% of the accounts it counted as adopters were false positives. A metric that overstates adoption sends sales and planning effort to the wrong accounts.
 </Section>
 
-<Section title="Full case study">
-Problem, decisions, and before and after: <Pending what="write-up" />
+<Section title="How it works" fig="3 → 1" figLabel="telemetry sources unified">
+<ServiceNowDiagram />
+
+Agent telemetry lived in 3 fragmented sources. I defined a 4-type agent taxonomy and designed the data pipeline that unifies them into one validated source-of-truth dataset. The adoption metric sits on top of it: instead of one fixed cutoff, an account counts as adopting when its usage per task clears a percentile-based threshold.
+</Section>
+
+<Section title="My role" fig="8+" figLabel="cross-functional leads aligned">
+**I decided:** the metric definition (a percentile-based usage-per-task threshold in place of a fixed cutoff), the 4-type agent taxonomy, the pipeline design, and the structure of the ROI framework.
+
+**I aligned:** 8+ cross-functional leads and the team Director on the new metric before it was adopted.
+</Section>
+
+<Section title="Before and after" fig="15% → 2.8%" figLabel="false positives">
+<div class="ba">
+  <div><span class="was">One fixed usage cutoff for every account</span><span class="arrow">→</span><span class="now">Percentile-based usage-per-task threshold</span></div>
+  <div><span class="was">15% of counted adopters were false positives</span><span class="arrow">→</span><span class="now">2.8%</span></div>
+  <div><span class="was">Agent telemetry split across 3 sources</span><span class="arrow">→</span><span class="now">One validated dataset, 4 agent types</span></div>
+</div>
+</Section>
+
+<Section title="The ROI framework" fig="3x" figLabel="faster resolution, 12 vs. 36 hours">
+Adoption says customers use agents; it does not say the agents are worth paying for. I created the customer-facing AI ROI framework, which multiplies three things: volume, resolution quality, and time to resolution.
+
+- Agents auto-resolve 80 to 90% of cases.
+- They resolve them 3x faster: 12 hours versus 36.
+- Each case saves 27 to 30 minutes of human time.
+</Section>
+
+<Section title="Results" fig="FY27" figLabel="planning metric">
+- False positives in the adoption metric fell from 15% to 2.8% across 3K accounts.
+- The metric is adopted for FY27 planning and as a sales team goal going live in 2027.
+- The ROI framework is customer-facing.
+</Section>
+
+<Section title="If I were the PM at a lab" fig="Per task" figLabel="not one cutoff for every user">
+I'd define agent adoption relative to the task the agent does, never as one usage cutoff for every customer, and pair it with an ROI measure from day one. A count of active users tells you an agent was opened; usage per task and resolution quality tell you it did the job.
+</Section>
+
+<Section title="Next">
+More detail on how I found the false positives and validated the new threshold: <Pending what="what I can share publicly" />
 </Section>
