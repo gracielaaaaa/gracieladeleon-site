@@ -1,0 +1,28 @@
+---
+// The reusable case-study template. Header (crumb, title, lede, facts) comes from frontmatter;
+// sections come from the MDX body using <Section title fig figLabel>.
+import { getCollection, render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+
+export async function getStaticPaths() {
+  const work = await getCollection("work");
+  return work.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const mark = d.ledeMark && d.lede.includes(d.ledeMark) ? d.ledeMark : null;
+const [before, after] = mark ? d.lede.split(mark) : [d.lede, ""];
+---
+<Base title={d.title} description={d.description}>
+  <article>
+    <div class="text">
+      <div class="crumb"><a href="/work/">Work</a> · {d.area}</div>
+      <h1 class="case-h">{d.title}</h1>
+      <p class="lede">{before}{mark && <span>{mark}</span>}{after}</p>
+      <div class="facts">{d.facts.map((f) => <div>{f.k}<b>{f.v}</b></div>)}</div>
+    </div>
+    <Content />
+    {d.status === "stub" && <p class="note stubnote">This page is a stub. The full case study is on the way.</p>}
+  </article>
+</Base>

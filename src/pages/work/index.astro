@@ -1,0 +1,15 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import ProjectRow from "../../components/ProjectRow.astro";
+
+const work = (await getCollection("work")).sort((a, b) => a.data.order - b.data.order);
+---
+<Base title="Work" description="Projects on evaluating AI agents, measuring adoption, and proving ROI, especially in health.">
+  <div class="text">
+    <h1 class="case-h">Work</h1>
+    <p class="lede">Each project answers one question: does this AI system actually work, for whom, and is it worth it? Every page uses the same template: problem, my role, decisions, before and after, results, and what I would ship next.</p>
+  </div>
+  <h2 class="lbl">All projects</h2>
+  {work.map((w) => <ProjectRow href={`/work/${w.id}/`} title={w.data.title} summary={w.data.summary} fig={w.data.fig} figLabel={w.data.figLabel} />)}
+</Base>

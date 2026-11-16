@@ -1,0 +1,86 @@
+---
+title: "An AI chief of staff that never hits Send"
+summary: "A scheduled agent on my real email, calendar, and notes, with safety enforced in code. Dry runs on real data caught what synthetic tests missed."
+fig: "28"
+figLabel: "real failures; synthetic evals caught 0"
+order: 1
+featured: true
+status: full
+area: "Evals"
+lede: "A scheduled agent drafts my email, books my work, and tracks every promise I make, while code makes sure it can never send, delete, or share. Dry runs on my real data found 28 failures that synthetic tests missed."
+ledeMark: "28 failures that synthetic tests missed"
+description: "A scheduled agent on real email, calendar, and notes, with safety enforced in code. Real-data dry runs found 28 failures that synthetic evals missed."
+facts:
+  - { k: "Role", v: "PM and builder" }
+  - { k: "When", v: "Oct 2026 to now" }
+  - { k: "Built with", v: "Claude Code, MCP" }
+  - { k: "Measures", v: "Evals" }
+---
+import Section from "../../components/Section.astro";
+import Pending from "../../components/Pending.astro";
+import CosDiagram from "../../components/CosDiagram.astro";
+
+<div class="video"><div><b>2-minute demo</b>A note arrives, the agent books and drafts, the guardrail blocks a send. Recorded on synthetic data. <Pending what="recording" /></div></div>
+
+<Section title="Problem" fig="3 roles" figLabel="school, teaching, consulting">
+I'm a dual-degree student, a teaching assistant, and a consultant. Most of what lands on me starts as a blank page, and the promises I make live in meeting notes, email, and chats with no single place to see them.
+
+The job: start every piece of work from a draft and keep every commitment in one place, without the agent ever acting on my behalf.
+</Section>
+
+<Section title="How it works" fig="4×" figLabel="runs a day in the cloud">
+<CosDiagram />
+
+A small model splits each incoming note into items and classifies them; a mid-size model drafts replies, recaps, and first work blocks; a guardrail decides what is allowed to reach my accounts. It connects through MCP to Gmail, Calendar, Drive, my meeting notes, and Canvas.
+
+<p class="note">Everything deterministic (time zones, free slots, dedupe keys, edit ratios) is plain tested code, never the model.</p>
+</Section>
+
+<Section title="My role" fig="AI native" figLabel="directing agents is the skill">
+**I decided:** the problem and scope, "drafts, never sends," the switch from a block list to an allow list, delivery through my calendar instead of email to myself, outlines instead of drafts for graded coursework, the privacy boundaries, and where to trade recall for precision.
+
+**AI built:** nearly all code, prompts, and tests, to my specs and under my review. I ran every real-data dry run and hand-labeled the eval sets.
+</Section>
+
+<Section title="Decisions and trade-offs" fig="0" figLabel="sends, deletes, or shares possible">
+**Safety in code, not the prompt.** A hook blocks anything not on an allow list, including tools on connectors added later. The cost: some useful actions, like deleting a stale event, still need me.
+
+**Precision or recall depends on what a mistake costs.** A missed promise breaks a commitment, so promise detection favors recall. A false style rule changes every future draft, so the edit learner favors precision.
+
+**Real data over synthetic sets.** Every feature ran in dry-run mode on my real accounts before it could write anything.
+
+**Outlines, not drafts, for graded work.** The original spec said to fully draft discussion posts. Where a course does not allow AI, that is an academic integrity risk, so the agent reads a per-course policy and writes outlines and work blocks instead.
+</Section>
+
+<Section title="Before and after" fig="59% → 100%" figLabel="promise detection precision">
+<div class="ba">
+  <div><span class="was">Block list missed a new "clear all" tool</span><span class="arrow">→</span><span class="now">Allow list blocks unknown tools</span></div>
+  <div><span class="was">Promise detection: 59% precision, a student name leaked</span><span class="arrow">→</span><span class="now">100% precision, 7/7 recall, no leaks</span></div>
+  <div><span class="was">Edit learner invented 1 false rule</span><span class="arrow">→</span><span class="now">0 false rules (4 of 5 habits found)</span></div>
+</div>
+</Section>
+
+<Section title="Results" fig="42" figLabel="injection cases; model-layer results pending">
+- 5 weeks live, 4 runs a day, 111 commitments tracked across three parts of my life.
+- 28 real failures found by dry runs; synthetic evals caught none.
+- Promise detection on 67 real sent emails: 7 of 7 commitments found, 100% precision.
+- A 42-case prompt-injection set: 19 attacks stopped by the guardrail alone.
+- Light-edit rate on drafts: <Pending what="draft audit" />
+- Promises closed on time: <Pending what="ledger sweep" />
+- Injection success rate at the model layer: <Pending what="Dec 2026" />
+- Time saved per reply or recap: <Pending what="measured on 10 items" />
+</Section>
+
+<Section title="If I were the PM at a lab" fig="Release gate" figLabel="real-data dry run before writes">
+I'd ship agent tool permissions as default-deny, with a dry-run mode on by default, and make "run it on real data without writing" a release gate. Synthetic evals told me everything was fine; real data found 28 problems.
+</Section>
+
+<Section title="Next">
+Pre-meeting briefs, a weekly overload check that drafts the "can we move this" email, and a setup flow a second user can run alone.
+
+<div class="linksrow">
+  <a href="https://github.com/gracielaaaaa/chief-of-staff-agent">Code on GitHub</a>
+  <a href="https://github.com/gracielaaaaa/chief-of-staff-agent/tree/main/docs/decisions">Decision records</a>
+  <a href="https://github.com/gracielaaaaa/chief-of-staff-agent/tree/main/evals/results">Eval results</a>
+</div>
+</Section>

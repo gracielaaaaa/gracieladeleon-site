@@ -1,0 +1,12 @@
+---
+// One case-study section: body in the reading column, an optional figure in the margin.
+interface Props { title: string; fig?: string; figLabel?: string; pending?: boolean }
+const { title, fig, figLabel, pending } = Astro.props;
+---
+<section class="sec">
+  <div>
+    <h2>{title}</h2>
+    <slot />
+  </div>
+  <div class="margin">{fig && <b>{fig}</b>}{figLabel && <span>{figLabel}</span>}{pending && <span class="pending">pending</span>}</div>
+</section>

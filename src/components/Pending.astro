@@ -1,0 +1,6 @@
+---
+// Inline marker for a number or claim that is not verified yet. Never replace with a guess.
+interface Props { what?: string }
+const { what } = Astro.props;
+---
+<span class="pending" title={what ? `Pending: ${what}` : "Pending"}>pending{what ? `: ${what}` : ""}</span>

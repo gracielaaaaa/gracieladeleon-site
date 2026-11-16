@@ -1,0 +1,206 @@
+<title>Portfolio Home Mockups</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;1,7..72,400&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: essay with margin notes. One reading column (about 640px) with a 150px margin column for figures and annotations; a thin mockup switcher on top (#home, #case). Follows the viewer's light or dark setting, as the real site will. */
+:root {
+  --paper: #fbfbfa; --ink: #1a1f2b; --soft: #5a6172; --rule: #e1e3e8; --accent: #1f5fae; --mark: #dce8f6; --panel: #f1f3f7;
+  --serif: "Literata", Georgia, serif; --sans: "Public Sans", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper: #14171d; --ink: #e8eaf0; --soft: #a3aabb; --rule: #2a2f3a; --accent: #82b4f0; --mark: #1b2e48; --panel: #1b1f27; color-scheme: dark } }
+:root[data-theme="dark"] { --paper: #14171d; --ink: #e8eaf0; --soft: #a3aabb; --rule: #2a2f3a; --accent: #82b4f0; --mark: #1b2e48; --panel: #1b1f27; color-scheme: dark }
+body { background: var(--paper); color: var(--ink); font-family: var(--sans); }
+a { color: inherit; }
+a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.switch { border-bottom: 1px solid var(--rule); background: var(--panel); }
+.switch .in { max-width: 900px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 10px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; font-size: 13px; color: var(--soft); }
+.switch a { text-decoration: none; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--rule); color: var(--ink); }
+.switch a[aria-current="true"] { border-color: var(--accent); color: var(--accent); }
+
+.page { max-width: 900px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 56px; }
+nav.site { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 14px; }
+nav.site .name { font-family: var(--serif); font-size: 18px; text-decoration: none; }
+nav.site ul { display: flex; gap: 18px; list-style: none; margin: 0; padding: 0; }
+nav.site ul a { color: var(--soft); text-decoration: none; }
+.col { max-width: 800px; margin: 56px auto 0; }
+.text { max-width: 640px; }
+.photo { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; display: block; }
+.byline { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+.byline p { margin: 0; font-size: 14px; color: var(--soft); line-height: 1.45; }
+.hello { font-family: var(--serif); font-size: clamp(30px, 4.6vw, 46px); line-height: 1.1; margin: 0 0 18px; font-weight: 500; text-wrap: balance; }
+.lede { font-family: var(--serif); font-size: 19px; line-height: 1.65; margin: 0; }
+.lede span { box-shadow: inset 0 -0.35em 0 var(--mark); }
+h3.lbl { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--soft); margin: 52px 0 8px; font-weight: 600; }
+.p { display: grid; grid-template-columns: minmax(0, 640px) 140px; gap: 28px; padding: 18px 0; border-top: 1px solid var(--rule); }
+.p h4 { font-family: var(--serif); font-weight: 500; font-size: 20px; margin: 0 0 6px; text-wrap: balance; }
+.p h4 a { text-decoration: none; background-image: linear-gradient(var(--accent), var(--accent)); background-size: 100% 1px; background-position: 0 100%; background-repeat: no-repeat; }
+.p p { margin: 0; color: var(--soft); line-height: 1.65; }
+.margin { border-left: 2px solid var(--accent); padding-left: 12px; align-self: start; min-width: 0; }
+.margin b { display: block; font-family: var(--serif); font-size: 20px; font-weight: 500; color: var(--accent); font-variant-numeric: tabular-nums; }
+.margin span { font-size: 12px; color: var(--soft); line-height: 1.45; display: block; margin-top: 2px; }
+.soon { font-size: 12px; color: var(--soft); border: 1px solid var(--rule); border-radius: 999px; padding: 2px 8px; }
+.signup { margin-top: 48px; padding: 22px; background: var(--panel); border-radius: 10px; max-width: 640px; display: grid; gap: 10px; }
+.signup h4 { margin: 0; font-family: var(--serif); font-weight: 500; font-size: 20px; }
+.signup p { margin: 0; color: var(--soft); line-height: 1.55; font-size: 15px; }
+.signup form { display: flex; gap: 8px; flex-wrap: wrap; }
+.signup input { flex: 1 1 220px; min-width: 0; font: inherit; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 6px; background: var(--paper); color: var(--ink); }
+.signup button { font: inherit; font-weight: 600; padding: 10px 16px; border-radius: 6px; border: 0; background: var(--accent); color: var(--paper); cursor: pointer; }
+.signup .ok { font-size: 14px; color: var(--accent); }
+footer { margin-top: 64px; border-top: 1px solid var(--rule); padding-top: 18px; display: flex; flex-wrap: wrap; gap: 10px 24px; font-size: 14px; color: var(--soft); justify-content: space-between; }
+footer .links { display: flex; gap: 18px; flex-wrap: wrap; }
+footer .links span { user-select: all; }
+
+.ctl { padding-top: 0 !important; gap: 10px 22px !important; }
+.grp { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.grp > span { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; margin-right: 2px; }
+.grp button { font: inherit; font-size: 13px; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 999px; padding: 4px 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.grp button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.grp i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+/* case study page */
+.crumb { font-size: 13px; color: var(--soft); margin-bottom: 14px; }
+.crumb a { text-decoration: none; color: var(--accent); }
+.case-h { font-family: var(--serif); font-size: clamp(30px, 4.4vw, 44px); line-height: 1.12; margin: 0 0 16px; font-weight: 500; text-wrap: balance; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 26px; margin: 22px 0 0; padding: 14px 0; border-block: 1px solid var(--rule); font-size: 13px; color: var(--soft); }
+.facts b { display: block; color: var(--ink); font-weight: 600; font-size: 14px; }
+.video { margin-top: 28px; aspect-ratio: 16 / 9; max-width: 100%; background: var(--panel); border: 1px dashed var(--rule); border-radius: 10px; display: grid; place-items: center; text-align: center; color: var(--soft); font-size: 14px; padding: 16px; }
+.video b { display: block; font-family: var(--serif); font-weight: 500; font-size: 20px; color: var(--ink); margin-bottom: 4px; }
+.sec { display: grid; grid-template-columns: minmax(0, 640px) 140px; gap: 28px; margin-top: 40px; }
+.sec h2 { font-family: var(--serif); font-weight: 500; font-size: 24px; margin: 0 0 10px; }
+.sec p, .sec li { line-height: 1.7; font-size: 16.5px; }
+.sec p { margin: 0 0 12px; }
+.sec ul { margin: 0 0 12px; padding-left: 20px; }
+.sec .note { font-size: 13px; color: var(--soft); }
+.ba { display: grid; gap: 10px; margin-top: 4px; }
+.ba div { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--rule); }
+.ba .was { color: var(--soft); }
+.ba .arrow { color: var(--accent); }
+.ba .now { font-weight: 600; }
+.diagram { overflow-x: auto; margin: 6px 0 4px; }
+.diagram svg { display: block; min-width: 600px; width: 100%; height: auto; }
+.diagram text { font-family: var(--sans); font-size: 12px; fill: var(--ink); }
+.diagram .s { fill: var(--soft); font-size: 11px; }
+.diagram rect { fill: var(--panel); stroke: var(--rule); }
+.diagram rect.g { fill: var(--mark); stroke: var(--accent); }
+.diagram path { stroke: var(--soft); fill: none; }
+.diagram .ah { fill: var(--soft); stroke: none; }
+.linksrow { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+.linksrow a { text-decoration: none; border: 1px solid var(--rule); border-radius: 6px; padding: 8px 12px; font-size: 14px; }
+@media (max-width: 640px) { .p, .sec { grid-template-columns: 1fr; gap: 10px; } .col { margin-top: 32px; } .ba div { grid-template-columns: 1fr; gap: 2px; } .ba .arrow { display: none; } }
+@media (prefers-reduced-motion: no-preference) { .p h4 a { transition: background-size .2s; } }
+</style>
+
+<div class="switch"><div class="in">Mockup:
+  <a href="#home" id="tab-home">Home page</a>
+  <a href="#case" id="tab-case">Case study page (flagship)</a>
+</div>
+  <div class="in ctl">
+    <div class="grp" role="group" aria-label="Theme"><span>Theme</span><button type="button" data-t="light" id="t-light">Light</button><button type="button" data-t="dark" id="t-dark">Dark</button></div>
+  </div>
+</div>
+
+<!-- HOME -->
+<div class="page" id="view-home">
+  <nav class="site"><a class="name" href="#home">Graciela De Leon</a><ul><li><a href="#home">Work</a></li><li><a href="#home">Writing</a></li><li><a href="#home">About</a></li></ul></nav>
+  <div class="col">
+    <div class="text">
+      <div class="byline"><img class="photo" src="__PHOTO__" alt="Graciela De Leon"><p>Product manager · Berkeley MBA/MPH<br>Previously ServiceNow AI Platform, pharma, consumer health</p></div>
+      <p class="hello">I measure whether AI agents actually work.</p>
+      <p class="lede">Most teams can demo an agent. Fewer can show that it holds up with real users, gets adopted, and pays for itself. I work on all three: <span>evals before launch, adoption after, and ROI for the business</span>, especially in health.</p>
+    </div>
+    <h3 class="lbl">Selected work</h3>
+    <div class="p"><div><h4><a href="#case">An AI chief of staff that never hits Send</a></h4><p>A scheduled agent on my real email, calendar, and notes, with safety enforced in code. Dry runs on real data caught what synthetic tests missed.</p></div><div class="margin"><b>28</b><span>real failures; synthetic evals caught 0</span></div></div>
+    <div class="p"><div><h4><a href="#home">Redefining agent adoption at ServiceNow</a></h4><p>A usage-per-task threshold replaced a fixed cutoff across 3K enterprise accounts.</p></div><div class="margin"><b>15% → 2.8%</b><span>false positives</span></div></div>
+    <div class="p"><div><h4><a href="#home">660K app reviews to one product decision</a></h4><p>A multi-agent pipeline with a blind verifier, where code checks every number the model writes.</p></div><div class="margin"><b>$7.62</b><span>total model spend</span></div></div>
+    <div class="p"><div><h4><a href="#home">Does a health question agent actually work?</a></h4><p>Accuracy against official guidance in English and Spanish, unsafe answers, and staff minutes saved.</p></div><div class="margin"><b>Dec 2026</b><span>results expected</span></div></div>
+    <p style="margin:14px 0 0;font-size:14px"><a href="#home" style="color:var(--accent)">All work →</a></p>
+
+    <h3 class="lbl">Writing</h3>
+    <div class="p"><div><h4><a href="#home">How do you know your AI agent is working?</a></h4><p>A three-part framework: evals before launch, adoption after, ROI for the business.</p></div><div class="margin"><span class="soon">Coming soon</span></div></div>
+    <div class="p"><div><h4><a href="#home">What 28 real failures taught me about synthetic evals</a></h4><p>Notes from building an agent on Claude Code and MCP.</p></div><div class="margin"><span class="soon">Coming soon</span></div></div>
+    <div class="p"><div><h4><a href="#home">Do AI health answers hold up in Spanish?</a></h4><p>Findings from the health question agent eval.</p></div><div class="margin"><span class="soon">Coming soon</span></div></div>
+
+    <footer><div class="links"><span>graciela.deleon@berkeley.edu</span><a href="#home">LinkedIn</a><a href="#home">GitHub</a></div></footer>
+  </div>
+</div>
+
+<!-- CASE STUDY -->
+<div class="page" id="view-case" hidden>
+  <nav class="site"><a class="name" href="#home">Graciela De Leon</a><ul><li><a href="#home">Work</a></li><li><a href="#home">Writing</a></li><li><a href="#home">About</a></li></ul></nav>
+  <div class="col">
+    <div class="text">
+      <div class="crumb"><a href="#home">Work</a> · Evals</div>
+      <h1 class="case-h">An AI chief of staff that never hits Send</h1>
+      <p class="lede">A scheduled agent drafts my email, books my work, and tracks every promise I make, while code makes sure it can never send, delete, or share. Dry runs on my real data found <span>28 failures that synthetic tests missed</span>.</p>
+      <div class="facts"><div>Role<b>PM and builder</b></div><div>When<b>Oct 2026 to now</b></div><div>Built with<b>Claude Code, MCP</b></div><div>Measures<b>Evals</b></div></div>
+    </div>
+    <div class="video"><div><b>2-minute demo</b>A note arrives, the agent books and drafts, the guardrail blocks a send. Recorded on synthetic data.</div></div>
+
+    <div class="sec"><div><h2>Problem</h2><p>I'm a dual-degree student, a teaching assistant, and a consultant. Most of what lands on me starts as a blank page, and the promises I make live in meeting notes, email, and chats with no single place to see them.</p><p>The job: start every piece of work from a draft and keep every commitment in one place, without the agent ever acting on my behalf.</p></div><div class="margin"><b>3 roles</b><span>school, teaching, consulting</span></div></div>
+
+    <div class="sec"><div><h2>How it works</h2>
+      <div class="diagram"><svg viewBox="0 0 640 150" role="img" aria-label="Inputs flow to a small model that classifies, a mid-size model that drafts, then a guardrail that allows only drafts, events, and files">
+        <defs><marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+        <rect x="4" y="38" width="118" height="70" rx="6"/><text x="16" y="62">Email, calendar,</text><text x="16" y="78">meeting notes,</text><text x="16" y="94">course pages</text>
+        <rect x="150" y="38" width="108" height="70" rx="6"/><text x="162" y="66">Classify</text><text class="s" x="162" y="84">small model</text>
+        <rect x="286" y="38" width="108" height="70" rx="6"/><text x="298" y="66">Draft</text><text class="s" x="298" y="84">mid-size model</text>
+        <rect class="g" x="422" y="38" width="98" height="70" rx="6"/><text x="434" y="66">Guardrail</text><text class="s" x="434" y="84">allow list in code</text>
+        <rect x="548" y="20" width="88" height="34" rx="6"/><text x="558" y="41">Drafts</text>
+        <rect x="548" y="60" width="88" height="34" rx="6"/><text x="558" y="81">Calendar</text>
+        <rect x="548" y="100" width="88" height="34" rx="6"/><text x="558" y="121">Review doc</text>
+        <path d="M122,73 H148" marker-end="url(#ar)"/><path d="M258,73 H284" marker-end="url(#ar)"/><path d="M394,73 H420" marker-end="url(#ar)"/>
+        <path d="M520,73 L546,37" marker-end="url(#ar)"/><path d="M520,73 H546" marker-end="url(#ar)"/><path d="M520,73 L546,117" marker-end="url(#ar)"/>
+      </svg></div>
+      <p class="note">Everything deterministic (time zones, free slots, dedupe keys, edit ratios) is plain tested code, never the model.</p>
+    </div><div class="margin"><b>4×</b><span>runs a day in the cloud</span></div></div>
+
+    <div class="sec"><div><h2>My role</h2><p><strong>I decided:</strong> the problem and scope, "drafts, never sends," the switch from a block list to an allow list, outlines instead of drafts for graded coursework, the privacy boundaries, and where to trade recall for precision.</p><p><strong>AI built:</strong> nearly all code, prompts, and tests, to my specs and under my review. I ran every real-data dry run and hand-labeled the eval sets.</p></div><div class="margin"><b>AI native</b><span>directing agents is the skill</span></div></div>
+
+    <div class="sec"><div><h2>Decisions and trade-offs</h2>
+      <p><strong>Safety in code, not the prompt.</strong> A hook blocks anything not on an allow list, including tools on connectors added later. The cost: some useful actions, like deleting a stale event, still need me.</p>
+      <p><strong>Precision or recall depends on what a mistake costs.</strong> A missed promise breaks a commitment, so promise detection favors recall. A false style rule changes every future draft, so the edit learner favors precision.</p>
+      <p><strong>Real data over synthetic sets.</strong> Every feature ran in dry-run mode on my real accounts before it could write anything.</p>
+    </div><div class="margin"><b>0</b><span>sends, deletes, or shares possible</span></div></div>
+
+    <div class="sec"><div><h2>Before and after</h2>
+      <div class="ba">
+        <div><span class="was">Block list missed a new "clear all" tool</span><span class="arrow">→</span><span class="now">Allow list blocks unknown tools</span></div>
+        <div><span class="was">Promise detection: 59% precision, a student name leaked</span><span class="arrow">→</span><span class="now">100% precision, 7/7 recall, no leaks</span></div>
+        <div><span class="was">Edit learner invented 1 false rule</span><span class="arrow">→</span><span class="now">0 false rules (4 of 5 habits found)</span></div>
+      </div>
+    </div><div class="margin"><b>59% → 100%</b><span>promise detection precision</span></div></div>
+
+    <div class="sec"><div><h2>Results</h2><ul><li>5 weeks live, 111 commitments tracked across three parts of my life.</li><li>28 real failures found by dry runs; synthetic evals caught none.</li><li>A 42-case prompt-injection set: 19 attacks stopped by the guardrail alone.</li><li>Pending: light-edit rate, on-time closure rate, and the model-layer injection score (December).</li></ul></div><div class="margin"><b>42</b><span>injection cases, results in Dec</span></div></div>
+
+    <div class="sec"><div><h2>If I were the PM at a lab</h2><p>I'd ship agent tool permissions as default-deny, with a dry-run mode on by default, and make "run it on real data without writing" a release gate. Synthetic evals told me everything was fine; real data found 28 problems.</p></div><div class="margin"><b>Release gate</b><span>real-data dry run before writes</span></div></div>
+
+    <div class="sec"><div><h2>Next</h2><p>Pre-meeting briefs, a weekly overload check that drafts the "can we move this" email, and a setup flow a second user can run alone.</p>
+      <div class="linksrow"><a href="#case">Code on GitHub</a><a href="#case">Decision records</a><a href="#case">Eval results</a></div></div><div class="margin"></div></div>
+
+    <footer><div class="links"><span>graciela.deleon@berkeley.edu</span><a href="#case">LinkedIn</a><a href="#case">GitHub</a></div></footer>
+  </div>
+</div>
+
+<script>
+(function () {
+  var views = ["home", "case"];
+  function show() {
+    var h = (location.hash || "#home").slice(1);
+    if (views.indexOf(h) < 0) h = "home";
+    views.forEach(function (v) {
+      document.getElementById("view-" + v).hidden = v !== h;
+      document.getElementById("tab-" + v).setAttribute("aria-current", v === h ? "true" : "false");
+    });
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener("hashchange", show);
+  show();
+
+  var root = document.documentElement, mq = window.matchMedia("(prefers-color-scheme: dark)");
+  function isDark() { var t = root.getAttribute("data-theme"); return t ? t === "dark" : mq.matches; }
+  function paint() { ["light", "dark"].forEach(function (t) { document.getElementById("t-" + t).setAttribute("aria-pressed", (isDark() ? "dark" : "light") === t ? "true" : "false"); }); }
+  document.querySelectorAll("[data-t]").forEach(function (b) { b.addEventListener("click", function () { root.setAttribute("data-theme", b.getAttribute("data-t")); paint(); }); });
+  if (mq.addEventListener) mq.addEventListener("change", paint);
+  paint();
+})();
+</script>

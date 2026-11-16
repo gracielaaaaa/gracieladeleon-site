@@ -1,0 +1,77 @@
+---
+import "../styles/global.css";
+import Analytics from "@vercel/analytics/astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  noindex?: boolean;
+}
+
+const SITE_NAME = "Graciela De Leon";
+const {
+  title,
+  description = "AI product manager. I measure whether AI agents actually work: evals before launch, adoption after, and ROI for the business, especially in health.",
+  ogImage = "/og.png",
+} = Astro.props;
+const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} | AI product manager`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogUrl = new URL(ogImage, Astro.site);
+const path = Astro.url.pathname.replace(/\/$/, "");
+const nav = [
+  { href: "/work/", label: "Work" },
+  { href: "/writing/", label: "Writing" },
+  { href: "/about/", label: "About" },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#fbfbfa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#14171d" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:title" content={title ?? "I measure whether AI agents actually work."} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Graciela De Leon: I measure whether AI agents actually work." />
+    <meta name="twitter:card" content="summary_large_image" />
+    {import.meta.env.PUBLIC_ALLOW_INDEXING !== "true" && <meta name="robots" content="noindex" />}
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="page">
+      <nav class="site" aria-label="Site">
+        <a class="name" href="/">Graciela De Leon</a>
+        <ul>
+          {nav.map((n) => (
+            <li><a href={n.href} aria-current={path.startsWith(n.href.replace(/\/$/, "")) ? "page" : undefined}>{n.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+      <main id="main" class="col">
+        <slot />
+        <footer class="site">
+          <div class="links">
+            <span>graciela.deleon@berkeley.edu</span>
+            <a href="https://www.linkedin.com/in/gracieladeleon/" rel="me">LinkedIn</a>
+            <a href="https://github.com/gracielaaaaa" rel="me">GitHub</a>
+          </div>
+        </footer>
+      </main>
+    </div>
+    <Analytics />
+  </body>
+</html>

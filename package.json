@@ -1,0 +1,28 @@
+{
+  "name": "gracieladeleon-site",
+  "version": "1.0.0",
+  "description": "Portfolio site of Graciela De Leon",
+  "scripts": {
+    "dev": "astro dev",
+    "check": "node scripts/predeploy-check.mjs",
+    "build": "node scripts/predeploy-check.mjs && astro build",
+    "preview": "astro preview",
+    "og": "node scripts/make-og.mjs"
+  },
+  "license": "UNLICENSED",
+  "type": "module",
+  "dependencies": {
+    "@astrojs/mdx": "^8.1.6",
+    "@fontsource-variable/literata": "^5.3.0",
+    "@fontsource-variable/public-sans": "^5.3.0",
+    "@vercel/analytics": "^2.0.1",
+    "astro": "^7.4.12"
+  },
+  "devDependencies": {
+    "@fontsource/literata": "^5.3.0",
+    "@fontsource/public-sans": "^5.3.0",
+    "satori": "^0.63.2",
+    "sharp": "^0.35.5"
+  },
+  "private": true
+}

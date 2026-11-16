@@ -1,0 +1,27 @@
+---
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import ProjectRow from "../components/ProjectRow.astro";
+import headshot from "../assets/headshot.jpg";
+
+const work = (await getCollection("work")).filter((w) => w.data.featured).sort((a, b) => a.data.order - b.data.order).slice(0, 4);
+const writing = (await getCollection("writing")).sort((a, b) => a.data.order - b.data.order);
+---
+<Base>
+  <div class="text">
+    <div class="byline">
+      <Image class="photo" src={headshot} alt="Graciela De Leon" width={112} height={112} densities={[1]} loading="eager" />
+      <p>Product manager · Berkeley MBA/MPH<br />Previously ServiceNow AI Platform, pharma, consumer health</p>
+    </div>
+    <h1 class="hello">I measure whether AI agents actually work.</h1>
+    <p class="lede">Most teams can demo an agent. Fewer can show that it holds up with real users, gets adopted, and pays for itself. I work on all three: <span>evals before launch, adoption after, and ROI for the business</span>, especially in health.</p>
+  </div>
+
+  <h2 class="lbl">Selected work</h2>
+  {work.map((w) => <ProjectRow href={`/work/${w.id}/`} title={w.data.title} summary={w.data.summary} fig={w.data.fig} figLabel={w.data.figLabel} />)}
+  <p class="more"><a href="/work/">All work →</a></p>
+
+  <h2 class="lbl">Writing</h2>
+  {writing.map((p) => <ProjectRow title={p.data.title} summary={p.data.summary} soon={!p.data.published} />)}
+</Base>

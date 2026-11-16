@@ -1,0 +1,37 @@
+---
+title: "660K app reviews to one product decision"
+summary: "A multi-agent pipeline with a blind verifier, where code checks every number the model writes."
+fig: "$7.62"
+figLabel: "total model spend"
+order: 3
+featured: true
+status: stub
+area: "Evals at scale"
+lede: "A product team with 18 months of app reviews needs to pick next quarter's focus, and needs numbers it can trust. I built a pipeline that classified 237,939 reviews for $7.62, with code checking every number in the final memo."
+ledeMark: "code checking every number in the final memo"
+description: "A multi-agent pipeline that turned 660K app reviews into one ranked product recommendation for $7.62, with a blind verifier and code-checked numbers."
+facts:
+  - { k: "Role", v: "PM and builder" }
+  - { k: "When", v: "Fall 2026, class project" }
+  - { k: "Built with", v: "Claude, Postgres, Vercel" }
+  - { k: "Measures", v: "Label quality, cost" }
+---
+import Section from "../../components/Section.astro";
+import Pending from "../../components/Pending.astro";
+
+<Section title="Headline facts" fig="86%" figLabel="topic agreement on a hand-labeled set">
+- 660,622 reviews ingested; 237,939 classified.
+- Golden set of 50 reviews I labeled blind: 86% topic, 94% intent, 86% severity agreement.
+- A blind second model checked a sample of 781 labels (83.7% topic agreement).
+- 8 of 8 prompt-injection cases resisted; 20 of 20 planted errors caught.
+- $7.62 total model spend; warm reruns cost $0.
+- No real users: the product lead is a course scenario.
+</Section>
+
+<Section title="Full case study">
+Problem, decisions, and before and after: <Pending what="write-up" />
+
+<div class="linksrow">
+  <a href="https://github.com/gracielaaaaa/spotify-review-insights">Code on GitHub</a>
+</div>
+</Section>
