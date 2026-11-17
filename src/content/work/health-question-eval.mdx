@@ -1,31 +1,75 @@
 ---
 title: "Does a health question agent actually work?"
-summary: "Accuracy against official guidance in English and Spanish, unsafe answers, and staff minutes saved."
-fig: "Dec 2026"
-figLabel: "results expected"
+summary: "Accuracy against dated official guidance in English and Spanish, unsafe answers, missed hand-offs, and staff minutes saved."
+fig: "Nov 30"
+figLabel: "results presented"
 order: 4
 featured: true
-status: stub
+status: full
 area: "Health evals"
-lede: "People now ask chatbots the questions they used to ask a clinic or a health department. This eval measures how often the answers match current official guidance, how often they are unsafe, and whether Spanish speakers get worse answers."
+lede: "People now ask chatbots the questions they used to ask a clinic or a health department. I designed an eval that treats this as a deployment decision: should a health department put an agent in front of residents, with what guardrails, and whether Spanish speakers get worse answers."
 ledeMark: "whether Spanish speakers get worse answers"
-description: "An eval of a health question agent: accuracy against official guidance in English and Spanish, unsafe answers, and staff minutes saved. Results expected December 2026."
+description: "An eval of a health department question agent across 4 models: accuracy against dated official guidance in English and Spanish, unsafe answers, missed hand-offs, and simulated staff minutes saved."
 facts:
-  - { k: "Role", v: "Evaluator" }
-  - { k: "When", v: "Fall 2026, in progress" }
+  - { k: "Role", v: "Evaluator, solo" }
+  - { k: "When", v: "Nov 2026, in progress" }
   - { k: "Setting", v: "Berkeley public health course" }
   - { k: "Measures", v: "Accuracy, safety, equity" }
 ---
 import Section from "../../components/Section.astro";
 import Pending from "../../components/Pending.astro";
+import HealthEvalDiagram from "../../components/HealthEvalDiagram.astro";
 
-<Section title="What it will measure" fig="EN / ES" figLabel="same questions, two languages">
-- Accuracy against a dated official source for each question.
-- Unsafe-answer rate, and whether the agent refers people on when it should (over-referral counts as a failure too).
-- The gap between English and Spanish answers.
-- Staff minutes saved.
+<Section title="Problem" fig="5" figLabel="topics a health department fields every day">
+A local health department answers the same resident questions over and over: vaccines, cancer screening, STI and HIV prevention, maternal health, heat and air quality. An agent could draft those answers. Before anyone deploys one, three things have to be known: how often it is right against current official guidance, how often it is unsafe, and whether it hands people to a person when it should.
+
+Leaderboards do not answer that. Broad health benchmarks score general conversations; this eval is narrow and operational: one public health use case, a dated answer key, hand-off behavior, a language gap, and a cost lens.
 </Section>
 
-<Section title="Results">
-All results: <Pending what="Dec 2026" />
+<Section title="How it works" fig="210" figLabel="questions, all synthetic">
+<HealthEvalDiagram />
+
+50 core questions, each in three phrasings (plain, worried resident, low literacy), give 150 English questions, plus 60 in Spanish. Each goes to 4 models, one each from Anthropic, OpenAI, Google, and an open-weights model a health department could host itself, with and without retrieval of dated official pages. That is about 1,700 answers.
+
+Questions and answer keys live in separate files, so key text can never leak into a prompt. Every key has a source and a date.
+</Section>
+
+<Section title="What it measures" fig="0 to 2" figLabel="accuracy scale, against the key only">
+- **Accuracy**, graded only against the dated key, never the grader's opinion.
+- **Unsafe answers**, with severity: misleading, could delay care, or could cause serious harm.
+- **Hand-off**: emergencies go to 911 or 988, personal decisions to a clinician. Refusing a question the agent should answer counts as a failure too, because it costs staff time.
+- **Citations**: code checks that every quoted passage appears in the cited source.
+- **English vs Spanish**: the same core questions, paired, graded by a fluent native Spanish speaker.
+- **Staff minutes saved**, from simulated reviewer decisions (approve, edit, reject). Labeled as a simulated estimate everywhere it appears.
+
+Every number gets a 95% confidence interval, and phrasing variants of one question are resampled together.
+</Section>
+
+<Section title="My role" fig="40" figLabel="answers I grade by hand, plus 20 in Spanish">
+**I decided:** the use case and the deployment framing; the 50 questions and their dated keys; the rubric; that an AI judge grades every answer but is reported only next to its agreement with human grades (Cohen's kappa), per dimension and per language; planting wrong answers to test the graders; and identical, simple retrieval for every model, so retrieval quality is not a hidden variable between providers.
+
+**AI built:** the harness (runner, retrieval, citation check, blind sheet, judge, statistics), to my specs and under my review.
+</Section>
+
+<Section title="Decisions and trade-offs" fig="7" figLabel="questions on a separate contested track">
+**Grading 1,700 answers.** Too many to hand-grade. An AI judge grades all of them, and I blind-grade a calibration sample with planted wrong answers mixed in. If the judge agrees poorly with humans on unsafe answers or hand-offs, the human sample becomes the primary result for that dimension.
+
+**Guidance that changed under the eval.** In 2026, parts of federal vaccine guidance were revised, stayed by a court, and appealed, and one CDC page now contradicts the scientific consensus. Rather than pick a side silently, 7 questions whose federal guidance is disputed go on a separate track. Full credit there means stating what the federal source currently says, naming the disagreement, and referring the resident to a clinician. Where a federal page contradicts the evidence, the key follows the consensus, the change is disclosed, and how often each model repeats the federal claim is reported as its own finding.
+
+**Over-refusal is a failure.** An agent that sends every question to a clinician looks safe and saves no one any time, so it is scored as a miss.
+</Section>
+
+<Section title="Results" fig="Nov 30" figLabel="final presentation">
+Accuracy, unsafe-answer rate, missed hand-offs, citation support, the English and Spanish gap, and simulated minutes saved: <Pending what="model runs, Nov 30 2026" />
+</Section>
+
+<Section title="If I were the PM at a lab" fig="Dated" figLabel="every answer key has a date">
+I'd treat official health guidance as something that changes, not as fixed ground truth: date every key, re-run when a source changes, and score contested topics separately so a model is not rewarded for confidently repeating whichever version it saw last. And I'd report the language gap next to the headline accuracy number, not in an appendix.
+</Section>
+
+<Section title="Limits">
+- All questions are synthetic. No resident data is used.
+- One primary grader plus one Spanish rater; the AI judge is only as good as its measured agreement.
+- Adoption and minutes saved are simulated, not from a real deployment.
+- U.S. federal and California sources only, current as of each key's date.
 </Section>
