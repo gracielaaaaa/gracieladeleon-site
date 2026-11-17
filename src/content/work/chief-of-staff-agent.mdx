@@ -115,6 +115,29 @@ v1 is why I report recall next to precision: it looked perfect and had dropped t
 - Time saved per reply or recap: <Pending what="measured on 10 items" />
 </Section>
 
+<Section title="Buy or build, now that assistants ship" fig="3" figLabel="always-on assistants launched this fall">
+While I was building this, three big labs shipped always-on assistants that read email and calendars: OpenAI's dots (September 29), Google's Gemini agent for Workspace (October 8, in preview), and Anthropic's Claude Duet (October 21, research preview). So the honest question: would I still build this?
+
+<table>
+  <thead><tr><th>What I need</th><th>OpenAI dots</th><th>Claude Duet</th><th>Gemini agent</th><th>Mine</th></tr></thead>
+  <tbody>
+    <tr><td>Can I get it?</td><td>ChatGPT Pro, from $100 a month</td><td>Pro and up, US waitlist</td><td>Workspace business plans, private preview</td><td>Running; budget $35 to $50 a month</td></tr>
+    <tr><td>Triage, drafts, scheduling</td><td>Yes</td><td>Yes, plus a morning brief</td><td>Yes, with reasons for priority</td><td>Yes</td></tr>
+    <tr><td>Can it send without me?</td><td>Per-action rules, which the docs call instructions the dot tries to follow</td><td>Asks before sensitive sends, payments, and deletes; the check runs outside the model</td><td>Acts under its own identity; approval for sends not documented</td><td>No: code blocks send, delete, and share</td></tr>
+    <tr><td>Student names kept out of logs</td><td>Not documented</td><td>Screens outgoing messages, not stored memory</td><td>Sees only what is shared; actions audited</td><td>Redacted in code before any ledger row</td></tr>
+    <tr><td>A promise ledger with measured recall</td><td>Not documented</td><td>Surfaces missed messages and follow-ups</td><td>Not documented</td><td>7 of 7 on my real sent mail</td></tr>
+  </tbody>
+</table>
+
+<p class="note">From launch posts and help pages as of November 17, 2026. All three are new and changing fast. Sources: <a href="https://techcrunch.com/2026/09/29/openai-launches-dots-its-bubbly-agentic-avatar/">dots launch</a>, <a href="https://learn.chatgpt.com/docs/dots/controls">dots controls</a>, <a href="https://claude.com/resources/articles/claude-duet">Claude Duet</a>, <a href="https://claude.com/resources/articles/claude-duet-safety-privacy-and-security">Duet safety</a>, <a href="https://www.constellationr.com/insights/news/google-cloud-launches-gemini-agent-work-across-enterprise-systems">Gemini agent</a>.</p>
+
+**What I'd buy.** If I started today, I'd buy the shell: triage, drafts, scheduling, and a daily brief. A product team maintains the connectors, and 7 of my 28 failures were connector quirks I had to fix myself.
+
+**What I'd keep building.** The parts none of them guarantee in their launch docs: no path to send at all, student data that never reaches a log, and a promise ledger whose recall I measure. For a teaching assistant, those are requirements, not features.
+
+**How I'd decide.** Not from launch posts. My real-data cases are an acceptance test: run the 28 failures and the 67-email promise set against a bought assistant in dry-run, and switch any capability where it matches mine. Head-to-head results: <Pending what="dry-run comparison" />
+</Section>
+
 <Section title="If I were the PM at a lab" fig="Release gate" figLabel="real-data dry run before writes">
 I'd ship agent tool permissions as default-deny, with a dry-run mode on by default, and make "run it on real data without writing" a release gate. Synthetic evals told me everything was fine; real data found 28 problems.
 </Section>
