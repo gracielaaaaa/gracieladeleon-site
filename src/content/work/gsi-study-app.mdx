@@ -18,6 +18,7 @@ facts:
 ---
 import Section from "../../components/Section.astro";
 import Pending from "../../components/Pending.astro";
+import Bars from "../../components/Bars.astro";
 
 <div class="demo-frame">
   <iframe src="/demos/study-app/" title="Study app demo with the midterm review content" loading="lazy"></iframe>
@@ -34,6 +35,36 @@ I had one section to help students get ready for a midterm built on term definit
 - **Play together.** A host view on the projector and a live room on students' phones: teams, buzzers, and scores, synced in real time.
 - **Instructor dashboard.** Deck usage, the most-missed cards, and where students drop off in the essay builder. It is password-protected and is the only code that reads usage data.
 - **A printable guide** made from the same content, for students who prefer paper.
+</Section>
+
+<Section title="The data" fig="4" figLabel="signals, each tied to a re-teaching question">
+**The content.** One file holds every deck, and the app, the game, and the printed guide all read from it:
+
+<Bars caption="Items per deck in the midterm review" rows={[
+  { label: "Key terms", sub: "define it, then its significance", value: 65, text: "65 cards" },
+  { label: "Name that source", sub: "quick recall from a line or summary", value: 9, text: "9 cards" },
+  { label: "Primary sources", sub: "seven questions for each reading", value: 8, text: "8 cards" },
+  { label: "Essay builder", sub: "7 steps each, plus an 8-item checklist", value: 6, text: "6 prompts" },
+  { label: "Historical agents", sub: "the five actors who cause change", value: 5, text: "5 cards" },
+]} />
+
+**What the app records.** Every signal starts from the question the dashboard has to answer: what should I re-teach in section? Each one is logged as a small row tied to a study session:
+
+<table>
+  <thead><tr><th>Signal</th><th>When it is logged</th><th>What it answers</th></tr></thead>
+  <tbody>
+    <tr><td>Deck started, deck finished</td><td>Opening a deck; reaching its end</td><td>Which decks students actually use, and finish</td></tr>
+    <tr><td>Card result</td><td>Each "got it" or "review again"</td><td>Which cards the class keeps missing</td></tr>
+    <tr><td>Essay step</td><td>Each step of the essay builder reached</td><td>Where students drop off while building an essay</td></tr>
+    <tr><td>Active time</td><td>Every 30 seconds, only while the tab is visible and in use</td><td>Real study time, not a tab left open</td></tr>
+  </tbody>
+</table>
+
+<p class="note">Active time stops counting after 2 minutes without input, and each report is capped at 2 minutes. The live game stores nothing: names, teams, buzzes, and scores exist only while the room is open.</p>
+
+**From signals to the dashboard.** The password-protected dashboard turns those rows into four views: deck usage, an essay builder funnel, the most-missed cards, and a per-student progress table that only I can see. The most-missed list is the view built to change what happens in section.
+
+**See the rows yourself.** The demo above runs the same tracking code but keeps every row in the page and sends nothing. Open it full screen, study a few cards, then open your browser console and type `__studydemo_rows` to see exactly what the real app would have logged.
 </Section>
 
 <Section title="My role" fig="1" figLabel="source of content for app, game, and guide">
