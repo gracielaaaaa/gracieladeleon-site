@@ -1,24 +1,59 @@
 ---
 title: "A study app for the course I teach"
-summary: "A study tool I built for students in a course where I am a graduate student instructor."
-fig: "Pending"
-figLabel: "aggregate usage"
+summary: "Solo study decks, a live team game for section, and a dashboard that shows me which cards the class keeps missing."
+fig: "4 days"
+figLabel: "from build to midterm"
 order: 5
 featured: false
-status: stub
+status: full
 area: "Adoption"
-lede: "A study app I built for students in a course where I am a graduate student instructor. This page will show aggregate usage only, never student data or course content."
-ledeMark: "aggregate usage only"
-description: "A study app built for students in a Berkeley course. Aggregate usage only."
+lede: "As a graduate student instructor, I built a midterm review app the week of the exam: study decks for students on their own, a buzzer game for section, and a dashboard that tells me what to re-teach. This page shows aggregate usage only, never student data or course content."
+ledeMark: "a dashboard that tells me what to re-teach"
+description: "A midterm review app built for students in a Berkeley course: study decks, a live team game, and an instructor dashboard. Aggregate usage only."
 facts:
   - { k: "Role", v: "GSI and builder" }
-  - { k: "Status", v: "In use" }
-  - { k: "Users", v: "Students in the course" }
-  - { k: "Measures", v: "Adoption" }
+  - { k: "When", v: "Oct 2026" }
+  - { k: "Users", v: "Students in my sections" }
+  - { k: "Measures", v: "Adoption, what to re-teach" }
 ---
 import Section from "../../components/Section.astro";
 import Pending from "../../components/Pending.astro";
 
-<Section title="Usage">
-Aggregate usage: <Pending what="from the app dashboard, with the instructor's OK" />
+<Section title="Problem" fig="1" figLabel="review section before the midterm">
+I had one section to help students get ready for a midterm built on term definitions, primary sources, and an argued essay. Paper review sheets do not tell me who used them or what students still get wrong. I wanted a tool students would actually open, and that would show me where the class was weakest while there was still time to fix it.
+</Section>
+
+<Section title="How it works" fig="5" figLabel="study decks">
+- **Study on your own.** Five decks: key terms, primary sources, historical agents, a quick-recall round, and an essay builder. Each card is marked "got it" or "review again", and missed cards come back until they are mastered.
+- **Essay builder.** Walks a student through an essay one step at a time: thesis, three body paragraphs, the primary source, the conclusion, and a final checklist.
+- **Play together.** A host view on the projector and a live room on students' phones: teams, buzzers, and scores, synced in real time.
+- **Instructor dashboard.** Deck usage, the most-missed cards, and where students drop off in the essay builder. It is password-protected and is the only code that reads usage data.
+- **A printable guide** made from the same content, for students who prefer paper.
+</Section>
+
+<Section title="My role" fig="1" figLabel="source of content for app, game, and guide">
+**I decided:** what to build and what to leave out; the content and the five decks; the review-again loop; that the game runs in section on a projector, not as homework; which signals the dashboard tracks, chosen to answer one question (what should I re-teach?); and the privacy rules below.
+
+**AI built:** the app, the live room, the dashboard, and the guide, to my specs and under my review.
+</Section>
+
+<Section title="Decisions and trade-offs" fig="Berkeley" figLabel="sign-in only, enforced in the database">
+**Locked to the class, at the database.** Sign-in is Google with a Berkeley account only, and the database itself rejects anything else, so a bug in the page cannot leak the content. The public page source holds no course material; it loads only after sign-in.
+
+**Measure to teach, not to grade.** Usage is tied to study sessions and read only by the dashboard. It never feeds a grade, and nothing from it leaves the course. Public numbers, like the ones on this page, are aggregate only.
+
+**One content file.** The decks, the game, and the printed guide all come from the same file, so a fix in one place fixes all three.
+</Section>
+
+<Section title="Results" fig="Pending" figLabel="aggregate usage">
+Students who used it, decks started and finished, and how the most-missed cards shaped section: <Pending what="aggregate numbers from the dashboard, with the instructor's OK" />
+</Section>
+
+<Section title="If I were the PM at a lab" fig="Re-teach" figLabel="the question the dashboard answers">
+I'd instrument a learning tool around the decision the teacher has to make next, not around engagement. "Most-missed cards" and "where students drop off" change what happens in section tomorrow; time-in-app does not.
+</Section>
+
+<Section title="Limits">
+- One course and one exam; students chose whether to use it, so users are self-selected.
+- Usage shows practice, not learning. It cannot say whether the app changed anyone's grade, and it is not used to try.
 </Section>
