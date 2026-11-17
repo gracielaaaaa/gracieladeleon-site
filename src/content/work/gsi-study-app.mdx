@@ -7,7 +7,7 @@ order: 5
 featured: false
 status: full
 area: "Adoption"
-lede: "As a graduate student instructor, I built a midterm review app the week of the exam: study decks for students on their own, a buzzer game for section, and a dashboard that tells me what to re-teach. This page shows aggregate usage only, never student data or course content."
+lede: "As a graduate student instructor, I built a midterm review app the week of the exam: study decks for students on their own, a buzzer game for section, and a dashboard that tells me what to re-teach. Usage on this page is aggregate only, never student data."
 ledeMark: "a dashboard that tells me what to re-teach"
 description: "A midterm review app built for students in a Berkeley course: study decks, a live team game, and an instructor dashboard. Aggregate usage only."
 facts:
@@ -20,8 +20,8 @@ import Section from "../../components/Section.astro";
 import Pending from "../../components/Pending.astro";
 
 <div class="demo-frame">
-  <iframe src="/demos/study-app/" title="Study app demo with made-up sample content" loading="lazy"></iframe>
-  <p class="note">A working demo with made-up sample content (not the course's). Try a deck, or open it in two tabs and play the game: host in one, join in the other. <a href="/demos/study-app/">Open the demo full screen</a></p>
+  <iframe src="/demos/study-app/" title="Study app demo with the midterm review content" loading="lazy"></iframe>
+  <p class="note">A working demo with the real midterm review content. Try a deck, or open it in two tabs and play the game: host in one, join in the other. <a href="/demos/study-app/">Open the demo full screen</a></p>
 </div>
 
 <Section title="Problem" fig="1" figLabel="review section before the midterm">
@@ -47,7 +47,7 @@ I had one section to help students get ready for a midterm built on term definit
 
 **Measure to teach, not to grade.** The sign-in screen tells students up front that I can see their study progress to plan review, and that it is not graded. Only the password-protected dashboard reads usage. Public numbers, like the ones on this page, are aggregate only.
 
-**A public demo without the course.** The real app is locked to the class, so the demo above runs the same code on made-up sample content, sends nothing anywhere, and syncs the game between browser tabs instead of over the network.
+**A public demo without the course.** The real app is locked to the class, so the demo above runs the same code and content without sign-in or tracking, sends nothing anywhere, and syncs the game between browser tabs instead of over the network.
 
 **One content file.** The decks, the game, and the printed guide all come from the same file, so a fix in one place fixes all three.
 </Section>

@@ -1,16 +1,18 @@
 """Build the public study app demo from the real app's index.html.
 
 Usage: python3 scripts/study-demo/build.py [path/to/app/index.html]
-Writes public/demos/study-app/index.html. The demo uses only the made-up
-sample content in sample-content.json, sends nothing over the network, and
-syncs the live game between tabs of one browser (BroadcastChannel).
+Writes public/demos/study-app/index.html. The demo uses the app's own review
+content (content.json next to index.html; publishing it was approved after the
+midterm), minus the course number. It sends nothing over the network and syncs
+the live game between tabs of one browser (BroadcastChannel).
 """
 import json, pathlib, sys
 
 HERE = pathlib.Path(__file__).resolve().parent
 SRC = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else pathlib.Path.home() / "gl45-review" / "index.html")
 OUT = HERE.parent.parent / "public" / "demos" / "study-app" / "index.html"
-sample = json.loads((HERE / "sample-content.json").read_text())
+sample = json.loads((SRC.parent / "content.json").read_text())
+sample["meta"].update({"course": "Survey of World History", "title": "Midterm review", "exam": "review"})
 html = SRC.read_text()
 
 FAKE_SB = r"""
@@ -51,7 +53,7 @@ FAKE_SB = r"""
 """
 
 BANNER = ('<div style="background:#fff7dd;color:#3a2f00;padding:8px 16px;font-size:14px;text-align:center">'
-          'Demo with made-up sample content. Progress stays in this browser and nothing is sent anywhere. '
+          'Demo with the real midterm review content. Progress stays in this browser and nothing is sent anywhere. '
           '<a href="/work/gsi-study-app/" target="_top" style="color:#003262;font-weight:700">Back to the case study</a></div>\n')
 
 def rep(old, new, count=1):
