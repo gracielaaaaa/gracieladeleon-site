@@ -19,6 +19,7 @@ facts:
 import Section from "../../components/Section.astro";
 import Pending from "../../components/Pending.astro";
 import CosDiagram from "../../components/CosDiagram.astro";
+import Bars from "../../components/Bars.astro";
 
 <div class="video"><div><b>2-minute demo</b>A note arrives, the agent books and drafts, the guardrail blocks a send. Recorded on synthetic data. <Pending what="recording" /></div></div>
 
@@ -50,6 +51,43 @@ A small model splits each incoming note into items and classifies them; a mid-si
 **Real data over synthetic sets.** Every feature ran in dry-run mode on my real accounts before it could write anything.
 
 **Outlines, not drafts, for graded work.** The original spec said to fully draft discussion posts. Where a course does not allow AI, that is an academic integrity risk, so the agent reads a per-course policy and writes outlines and work blocks instead.
+</Section>
+
+<Section title="The data" fig="28" figLabel="failures, each logged with a fix and a version">
+**Every failure is a row.** Each one from the real-data dry runs is logged with what broke, the fix, and the release that fixed it: 24 fixed in a versioned release, 1 turned into a workflow rule, 3 still open. Grouped by what went wrong:
+
+<Bars caption="28 real-data failures by type" rows={[
+  { label: "Connector and API quirks", sub: "a search silently returned nothing; a file could not be edited after creating it", value: 7, text: "7" },
+  { label: "Scheduling judgment", sub: "booked over focus time; called a business before it opened", value: 5, text: "5" },
+  { label: "What counts as a task or promise", sub: "same-day logistics counted; an exam deadline lost", value: 4, text: "4" },
+  { label: "Time windows and state", sub: "a 12-day-old client promise fell outside the lookback", value: 4, text: "4" },
+  { label: "Privacy and guardrails", sub: "a student's name reached a ledger row; a block list missed a new tool", value: 4, text: "4" },
+  { label: "Parsing and measurement", sub: "deleting the agent's own flag counted as my edit", value: 2, text: "2" },
+  { label: "Instructions and workflow", sub: "a stale prompt line beat the config file", value: 2, text: "2" },
+]} note="Categories are mine; the full log has one line per failure." />
+
+**Promise detection, measured on my real sent mail.** 67 sent messages in 7 days. Code removed 18 automated messages and 1 excluded domain before any model call; 41 reached the model. I labeled the ground truth by hand: 7 real commitments.
+
+<table>
+  <thead><tr><th>Version</th><th class="n">Returned</th><th class="n">Recall</th><th class="n">Precision</th><th class="n">Name leaks</th><th>What changed</th></tr></thead>
+  <tbody>
+    <tr><td>v0</td><td class="n">11</td><td class="n">7 of 7</td><td class="n">~59%</td><td class="n">1</td><td>First prompt</td></tr>
+    <tr><td>v1</td><td class="n">5</td><td class="n">5 of 7</td><td class="n">100%</td><td class="n">0</td><td>Excluded same-day logistics and quoted text; lost "I need to..." obligations</td></tr>
+    <tr><td>v2</td><td class="n">6</td><td class="n">7 of 7</td><td class="n">100%</td><td class="n">0</td><td>Added obligations back; code now redacts names</td></tr>
+  </tbody>
+</table>
+
+v1 is why I report recall next to precision: it looked perfect and had dropped the most important item. Raw predictions stay local; only aggregates are published.
+
+**Smaller evals, and the trade-off each one made:**
+
+<table>
+  <thead><tr><th>Eval</th><th>Result</th><th>Decision</th></tr></thead>
+  <tbody>
+    <tr><td>Needs a reply (10 synthetic threads)</td><td>10 of 10</td><td>A regression test, not an accuracy estimate: it includes the one real false positive the prompt was fixed for.</td></tr>
+    <tr><td>Learning my edits (8 pairs, 5 planted habits)</td><td>v0: 5 of 5, 1 false rule. v1: 4 of 5, 0 false rules.</td><td>Shipped v1. A wrong style rule changes every future draft, so precision beats recall here.</td></tr>
+  </tbody>
+</table>
 </Section>
 
 <Section title="Before and after" fig="59% → 100%" figLabel="promise detection precision">

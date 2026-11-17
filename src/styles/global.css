@@ -127,3 +127,4 @@ footer.site .links span { user-select: all; }
 .sec th, .sec td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); }
 .sec th { font-weight: 600; color: var(--soft); font-size: 12.5px; }
 .sec td.n, .sec th.n { text-align: right; }
+.sec td.n { white-space: nowrap; }
