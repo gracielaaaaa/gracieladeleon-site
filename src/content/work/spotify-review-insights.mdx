@@ -21,6 +21,11 @@ import Pending from "../../components/Pending.astro";
 import SpotifyDiagram from "../../components/SpotifyDiagram.astro";
 import Bars from "../../components/Bars.astro";
 
+<div class="demo-frame">
+  <iframe src="https://spotify-reviews-gdl.vercel.app" title="Spotify review insights dashboard, live" loading="lazy"></iframe>
+  <p class="note">The live dashboard, reading the processed data from its database. Click a claim ID in the recommendation to see the number code computed, or a review ID to see the source review. <a href="https://spotify-reviews-gdl.vercel.app">Open the dashboard full screen</a></p>
+</div>
+
 <div class="video"><div><b>90-second demo</b>The dashboard, one review traced from raw text to a cited number in the memo. <Pending what="recording" /></div></div>
 
 <Section title="Problem" fig="660,622" figLabel="reviews, May 2022 to Nov 2023">
