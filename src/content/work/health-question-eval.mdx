@@ -19,6 +19,7 @@ facts:
 import Section from "../../components/Section.astro";
 import Pending from "../../components/Pending.astro";
 import HealthEvalDiagram from "../../components/HealthEvalDiagram.astro";
+import Bars from "../../components/Bars.astro";
 
 <Section title="Problem" fig="5" figLabel="topics a health department fields every day">
 A local health department answers the same resident questions over and over: vaccines, cancer screening, STI and HIV prevention, maternal health, heat and air quality. An agent could draft those answers. Before anyone deploys one, three things have to be known: how often it is right against current official guidance, how often it is unsafe, and whether it hands people to a person when it should.
@@ -43,6 +44,52 @@ Questions and answer keys live in separate files, so key text can never leak int
 - **Staff minutes saved**, from simulated reviewer decisions (approve, edit, reject). Labeled as a simulated estimate everywhere it appears.
 
 Every number gets a 95% confidence interval, and phrasing variants of one question are resampled together.
+</Section>
+
+<Section title="The data" fig="80" figLabel="dated sources behind 50 answer keys">
+**The questions.** 50 core questions across 5 topics: vaccines (12), cancer screening (10), STI and HIV (10), maternal health (10), and heat and air quality (8). Each is written three ways, plain, worried, and low literacy, with the same facts so one key fits all three. The Spanish set takes 4 core questions per topic, 20 in all, in the same three phrasings. Every question is synthetic.
+
+The mix is built to test hand-offs, not just facts. More than half the questions should not get a plain answer:
+
+<Bars caption="What the right response is, by core question" rows={[
+  { label: "Answer", value: 22, text: "22" },
+  { label: "Answer and refer", sub: "answer, then point to a clinician", value: 19, text: "19" },
+  { label: "Hand off to a clinician", sub: "a personal medical decision", value: 4, text: "4" },
+  { label: "Hand off urgently", sub: "911 or 988", value: 4, text: "4" },
+  { label: "Hand off locally", sub: "the health department itself", value: 1, text: "1" },
+]} />
+
+**The answer keys.** Each key lists the facts a full-credit answer must convey (155 in all) and the statements that make it unsafe (95). Every key cites a dated source:
+
+<table>
+  <thead><tr><th>Answer key sources</th><th class="n">Count</th></tr></thead>
+  <tbody>
+    <tr><td>Source citations across the 50 keys</td><td class="n">80</td></tr>
+    <tr><td>Distinct pages</td><td class="n">65</td></tr>
+    <tr><td>From CDC / USPSTF / others</td><td class="n">32 / 14 / 34</td></tr>
+    <tr><td>Guidance dated 2025 or 2026</td><td class="n">59 of 80</td></tr>
+    <tr><td>Pages saved as text for retrieval and citation checks</td><td class="n">78 of 80</td></tr>
+  </tbody>
+</table>
+
+The 2 unsaved pages sit behind a bot check. By guidance status, 38 keys are stable, 5 changed since 2024, and 7 are contested, 6 of them on vaccines.
+
+**Testing the graders.** 10 deliberately wrong answers are mixed into the blind grading sheet, one in Spanish. A grader who misses them is not trusted on the rest:
+
+<table>
+  <thead><tr><th>Planted error</th><th class="n">Answers</th></tr></thead>
+  <tbody>
+    <tr><td>Wrong fact</td><td class="n">5</td></tr>
+    <tr><td>Missed hand-off</td><td class="n">2</td></tr>
+    <tr><td>Outdated guidance</td><td class="n">1</td></tr>
+    <tr><td>Fabricated citation</td><td class="n">1</td></tr>
+    <tr><td>Contested topic mishandled</td><td class="n">1</td></tr>
+  </tbody>
+</table>
+
+**The Spanish set.** A fluent native speaker reviewed all 60 Spanish questions for natural wording and same meaning before any answers were generated. 59 of 60 passed both checks, and 6 rewordings were applied.
+
+<p class="note">The question set, answer keys, and grading code will be published with the results. <Pending what="publish after Nov 30" /></p>
 </Section>
 
 <Section title="My role" fig="40" figLabel="answers I grade by hand, plus 20 in Spanish">
