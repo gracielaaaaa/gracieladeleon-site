@@ -1,0 +1,19 @@
+---
+// Single-series horizontal bars, labeled directly (no legend needed).
+// Each row: label, value (sets bar length), text (printed value), optional sub-line and hover tip.
+interface Row { label: string; value: number; text: string; sub?: string; tip?: string; muted?: boolean }
+interface Props { caption: string; rows: Row[]; max?: number; note?: string }
+const { caption, rows, max, note } = Astro.props;
+const top = max ?? Math.max(...rows.map((r) => r.value));
+---
+<figure class="bars" role="group" aria-label={caption}>
+  <figcaption>{caption}</figcaption>
+  {rows.map((r) => (
+    <div class="bar-row" title={r.tip ?? `${r.label}: ${r.text}`}>
+      <div class="bar-label">{r.label}{r.sub && <span>{r.sub}</span>}</div>
+      <div class="bar-track"><i class={r.muted ? "muted" : ""} style={`width:${Math.max(0.6, (100 * r.value) / top).toFixed(2)}%`}></i></div>
+      <div class="bar-val">{r.text}</div>
+    </div>
+  ))}
+  {note && <p class="note">{note}</p>}
+</figure>

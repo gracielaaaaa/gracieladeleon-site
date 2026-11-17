@@ -1,0 +1,68 @@
+{
+ "synthetic": true,
+ "accounts": 3000,
+ "cutoff": 400,
+ "percentile": 0.45,
+ "cleaning": {
+  "usage_rows_raw": 3127,
+  "duplicates_removed": 90,
+  "orphans_dropped": 37,
+  "accounts_in_dataset": 3000
+ },
+ "fixed": {
+  "counted": 746,
+  "true_pos": 619,
+  "false_pos": 127,
+  "missed": 1028,
+  "true_neg": 1226,
+  "fp_share": 0.17024128686327078,
+  "recall": 0.3758348512446873
+ },
+ "percentile_metric": {
+  "counted": 1651,
+  "true_pos": 1606,
+  "false_pos": 45,
+  "missed": 41,
+  "true_neg": 1308,
+  "fp_share": 0.027256208358570563,
+  "recall": 0.9751062537947783
+ },
+ "by_type": [
+  {
+   "type": "Triage",
+   "accounts": 914,
+   "fixed_fp": 124,
+   "fixed_counted": 605,
+   "pctl_fp": 12,
+   "pctl_counted": 503,
+   "threshold": 0.977
+  },
+  {
+   "type": "Q&A",
+   "accounts": 892,
+   "fixed_fp": 3,
+   "fixed_counted": 112,
+   "pctl_fp": 19,
+   "pctl_counted": 491,
+   "threshold": 0.169
+  },
+  {
+   "type": "Actions",
+   "accounts": 593,
+   "fixed_fp": 0,
+   "fixed_counted": 24,
+   "pctl_fp": 10,
+   "pctl_counted": 326,
+   "threshold": 0.066
+  },
+  {
+   "type": "Requests",
+   "accounts": 601,
+   "fixed_fp": 0,
+   "fixed_counted": 5,
+   "pctl_fp": 4,
+   "pctl_counted": 331,
+   "threshold": 0.032
+  }
+ ]
+}

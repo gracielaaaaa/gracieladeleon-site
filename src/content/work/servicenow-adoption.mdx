@@ -19,6 +19,8 @@ facts:
 import Section from "../../components/Section.astro";
 import Pending from "../../components/Pending.astro";
 import ServiceNowDiagram from "../../components/ServiceNowDiagram.astro";
+import Bars from "../../components/Bars.astro";
+import syn from "../../data/adoption-synthetic.json";
 
 <Section title="Problem" fig="15%" figLabel="false positives under the old cutoff">
 Leadership needed to know which enterprise accounts had actually adopted AI agents. The existing metric used one fixed usage cutoff, and 15% of the accounts it counted as adopters were false positives. A metric that overstates adoption sends sales and planning effort to the wrong accounts.
@@ -41,6 +43,46 @@ Agent telemetry lived in 3 fragmented sources. I defined a 4-type agent taxonomy
   <div><span class="was">One fixed usage cutoff for every account</span><span class="arrow">→</span><span class="now">Percentile-based usage-per-task threshold</span></div>
   <div><span class="was">15% of counted adopters were false positives</span><span class="arrow">→</span><span class="now">2.8%</span></div>
   <div><span class="was">Agent telemetry split across 3 sources</span><span class="arrow">→</span><span class="now">One validated dataset, 4 agent types</span></div>
+</div>
+</Section>
+
+<Section title="The method, on synthetic data" fig="Synthetic" figLabel="no company data on this page">
+<p class="note">Everything in this section is made up. It recreates the method on 3,000 synthetic accounts so you can see and rerun it; it uses no company data, tables, fields, or real distributions. I tuned the generator so the results land near the real ones, so the synthetic numbers illustrate the method, not prove the result.</p>
+
+**Three messy sources into one dataset.** Accounts, monthly agent usage, and eligible task volume, joined in SQL. The usage source arrives with a reloaded batch and rows for unknown accounts, as real telemetry does:
+
+<table>
+  <thead><tr><th>Step</th><th class="n">Rows</th></tr></thead>
+  <tbody>
+    <tr><td>Usage rows as delivered</td><td class="n">{syn.cleaning.usage_rows_raw.toLocaleString("en-US")}</td></tr>
+    <tr><td>Exact duplicates removed</td><td class="n">{syn.cleaning.duplicates_removed}</td></tr>
+    <tr><td>Rows for unknown accounts dropped</td><td class="n">{syn.cleaning.orphans_dropped}</td></tr>
+    <tr><td>Accounts in the unified dataset</td><td class="n">{syn.cleaning.accounts_in_dataset.toLocaleString("en-US")}</td></tr>
+  </tbody>
+</table>
+
+**Why one cutoff fails.** Agent types do very different amounts of work per task. A triage agent fires on nearly every task, so a big account clears a raw-usage cutoff even when nobody relies on it, while a low-volume agent type almost never clears it. Ranking usage per task within each agent type fixes both errors.
+
+<Bars caption="Share of counted adopters that are false positives (synthetic)" max={0.2} rows={[
+  { label: "One fixed cutoff", sub: `${syn.fixed.false_pos} of ${syn.fixed.counted} counted`, value: syn.fixed.fp_share, text: (100 * syn.fixed.fp_share).toFixed(1) + "%" },
+  { label: "Per-task percentile", sub: `${syn.percentile_metric.false_pos} of ${syn.percentile_metric.counted.toLocaleString("en-US")} counted`, value: syn.percentile_metric.fp_share, text: (100 * syn.percentile_metric.fp_share).toFixed(1) + "%" },
+]} />
+
+<table>
+  <thead><tr><th>Agent type</th><th class="n">Accounts</th><th class="n">Counted, fixed cutoff</th><th class="n">False positives</th><th class="n">Counted, percentile</th><th class="n">False positives</th></tr></thead>
+  <tbody>
+    {syn.by_type.map((t) => <tr><td>{t.type}</td><td class="n">{t.accounts}</td><td class="n">{t.fixed_counted}</td><td class="n">{t.fixed_fp}</td><td class="n">{t.pctl_counted}</td><td class="n">{t.pctl_fp}</td></tr>)}
+  </tbody>
+</table>
+
+On this synthetic data, {syn.by_type[0].fixed_fp} of the {syn.fixed.false_pos} false positives under the fixed cutoff come from the high-volume triage type, and the cutoff finds only {(100 * syn.fixed.recall).toFixed(0)}% of accounts that really adopted. The per-task percentile finds {(100 * syn.percentile_metric.recall).toFixed(0)}%.
+
+<div class="linksrow">
+  <a href="/data/adoption-synthetic/adoption_metric.sql">The SQL</a>
+  <a href="/data/adoption-synthetic/agent_usage.csv">Usage (CSV)</a>
+  <a href="/data/adoption-synthetic/task_volume.csv">Task volume (CSV)</a>
+  <a href="/data/adoption-synthetic/accounts.csv">Accounts (CSV)</a>
+  <a href="https://github.com/gracielaaaaa/gracieladeleon-site/blob/main/scripts/synthetic-adoption/make.py">Generator script</a>
 </div>
 </Section>
 

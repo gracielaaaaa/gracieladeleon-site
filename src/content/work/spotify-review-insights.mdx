@@ -19,6 +19,7 @@ facts:
 import Section from "../../components/Section.astro";
 import Pending from "../../components/Pending.astro";
 import SpotifyDiagram from "../../components/SpotifyDiagram.astro";
+import Bars from "../../components/Bars.astro";
 
 <div class="video"><div><b>90-second demo</b>The dashboard, one review traced from raw text to a cited number in the memo. <Pending what="recording" /></div></div>
 
@@ -36,6 +37,47 @@ The hard part is not reading reviews. It is producing counts a leadership team c
 A small model reads each review in bulk and labels topic, intent, severity, and an exact supporting quote. A second small model, with a separate prompt that never sees the first label, re-labels a random 1% sample. Code then groups complaints into issues, ranks them, and builds a claims table. One larger-model call writes the memo from those aggregates only, and code rejects the memo if any number or review ID does not match a claim.
 
 <p class="note">Code owns dedupe, caching, validation, grouping, arithmetic, ranking, and the spend cap. Models only do the reading and the writing.</p>
+</Section>
+
+<Section title="The data" fig="660,622" figLabel="rows in, every one accounted for">
+**The source.** 660,622 Spotify app reviews from May 17, 2022 to November 15, 2023, with star rating, date, and app version (missing on 159,701 rows). The ratings are polarized: 37% are one star and 45% are five stars. Two months, July and October 2023, carry about three times a typical month's volume; I flag that rather than explain it.
+
+<Bars caption="Where every row went" max={660622} rows={[
+  { label: "Ingested", sub: "13 empty, 0 duplicate IDs", value: 660622, text: "660,622" },
+  { label: "In declared scope", sub: "first 100K nonempty, seeded order", value: 100000, text: "100,000" },
+  { label: "Labeled by the model", sub: "3 rejected by schema checks", value: 99997, text: "99,997" },
+  { label: "Labeled in total", sub: "plus 159,843 by exact-text reuse", value: 237939, text: "237,939" },
+  { label: "Quarantined, with a reason", sub: "out of scope, empty, or invalid", value: 422683, text: "422,683", muted: true },
+]} />
+
+**How I knew the labels were right.** Two independent checks, and a test of the checker itself:
+
+<table>
+  <thead><tr><th>Check</th><th class="n">n</th><th class="n">Topic</th><th class="n">Intent</th><th class="n">Severity</th></tr></thead>
+  <tbody>
+    <tr><td>Model vs. my hand labels</td><td class="n">50</td><td class="n">86%</td><td class="n">94%</td><td class="n">86%</td></tr>
+    <tr><td>Model vs. blind second model</td><td class="n">781</td><td class="n">83.7%</td><td class="n">88.7%</td><td class="n">82.8%</td></tr>
+    <tr><td>Planted wrong labels caught</td><td class="n">20</td><td class="n" colspan="3">20 of 20</td></tr>
+  </tbody>
+</table>
+
+The most common disagreement was billing versus usability (21 of 781), the same boundary the paywall and ads complaints sit on. In the hand-labeled set, every supporting quote was an exact substring of its review.
+
+<Bars caption="Issues ranked by complaints × mean severity (priority score)" rows={[
+  { label: "Premium paywall", sub: "7,370 complaints · severity 2.94", value: 21636, text: "21,636" },
+  { label: "Ads", sub: "8,509 complaints · severity 2.22", value: 18856, text: "18,856" },
+  { label: "Crashes, won't open", sub: "1,794 complaints · severity 3.64", value: 6534, text: "6,534" },
+  { label: "Playback stops or skips", sub: "1,790 complaints · severity 3.20", value: 5731, text: "5,731" },
+  { label: "Shuffle and controls", sub: "2,003 complaints · severity 2.79", value: 5581, text: "5,581" },
+  { label: "Login failures", sub: "1,131 complaints · severity 3.88", value: 4385, text: "4,385" },
+]} note="Not shown: general criticism (39,269 complaints, score 78,558), the largest bucket, set aside as not actionable on its own. Severity is 1 to 5, assigned by the model and checked as above." />
+
+<div class="linksrow">
+  <a href="https://github.com/gracielaaaaa/spotify-review-insights/blob/main/grading/ingestion.json">Ingestion report</a>
+  <a href="https://github.com/gracielaaaaa/spotify-review-insights/blob/main/grading/ranking.csv">Full ranking (CSV)</a>
+  <a href="https://github.com/gracielaaaaa/spotify-review-insights/blob/main/db/schema.sql">Database schema</a>
+  <a href="https://github.com/gracielaaaaa/spotify-review-insights/blob/main/pipeline/rank.py">Ranking code</a>
+</div>
 </Section>
 
 <Section title="My role" fig="50" figLabel="reviews I labeled by hand">
