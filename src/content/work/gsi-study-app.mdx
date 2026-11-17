@@ -19,6 +19,11 @@ facts:
 import Section from "../../components/Section.astro";
 import Pending from "../../components/Pending.astro";
 
+<div class="demo-frame">
+  <iframe src="/demos/study-app/" title="Study app demo with made-up sample content" loading="lazy"></iframe>
+  <p class="note">A working demo with made-up sample content (not the course's). Try a deck, or open it in two tabs and play the game: host in one, join in the other. <a href="/demos/study-app/">Open the demo full screen</a></p>
+</div>
+
 <Section title="Problem" fig="1" figLabel="review section before the midterm">
 I had one section to help students get ready for a midterm built on term definitions, primary sources, and an argued essay. Paper review sheets do not tell me who used them or what students still get wrong. I wanted a tool students would actually open, and that would show me where the class was weakest while there was still time to fix it.
 </Section>
@@ -40,7 +45,9 @@ I had one section to help students get ready for a midterm built on term definit
 <Section title="Decisions and trade-offs" fig="Berkeley" figLabel="sign-in only, enforced in the database">
 **Locked to the class, at the database.** Sign-in is Google with a Berkeley account only, and the database itself rejects anything else, so a bug in the page cannot leak the content. The public page source holds no course material; it loads only after sign-in.
 
-**Measure to teach, not to grade.** Usage is tied to study sessions and read only by the dashboard. It never feeds a grade, and nothing from it leaves the course. Public numbers, like the ones on this page, are aggregate only.
+**Measure to teach, not to grade.** The sign-in screen tells students up front that I can see their study progress to plan review, and that it is not graded. Only the password-protected dashboard reads usage. Public numbers, like the ones on this page, are aggregate only.
+
+**A public demo without the course.** The real app is locked to the class, so the demo above runs the same code on made-up sample content, sends nothing anywhere, and syncs the game between browser tabs instead of over the network.
 
 **One content file.** The decks, the game, and the printed guide all come from the same file, so a fix in one place fixes all three.
 </Section>

@@ -102,3 +102,9 @@ footer.site .links span { user-select: all; }
 }
 @media (prefers-reduced-motion: no-preference) { .p h3 a { transition: background-size .2s; } }
 .stubnote { margin-top: 40px; font-size: 13px; color: var(--soft); }
+
+/* embedded live demo on a case page */
+.demo-frame { margin: 8px 0 32px; }
+.demo-frame iframe { width: 100%; height: 600px; border: 1px solid var(--rule); border-radius: 10px; background: var(--panel); display: block; }
+@media (max-width: 640px) { .demo-frame iframe { height: 520px; } }
+.demo-frame .note { font-size: 13px; color: var(--soft); margin-top: 8px; }

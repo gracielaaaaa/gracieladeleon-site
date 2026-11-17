@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Study app demo</title>
+<style>
+:root {
+  --blue: #003262; --gold: #FDB515; --bg: #f6f7fb; --card: #ffffff; --ink: #14213d;
+  --muted: #5b6475; --line: #dde2ec; --ok: #1f7a4d; --warn: #b4441c; --soft: #e9eef8;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0d1424; --card: #16213a; --ink: #eef2fb; --muted: #a9b3c7; --line: #2a3756; --soft: #1d2a47; }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+body { min-height: 100vh; }
+header { background: var(--blue); color: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 5; }
+header .brand { font-weight: 800; letter-spacing: .3px; cursor: pointer; }
+header .brand span { color: var(--gold); }
+header .who { margin-left: auto; font-size: 13px; opacity: .85; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 45vw; }
+header button { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.5); padding: 4px 10px; border-radius: 8px; font-size: 13px; }
+main { max-width: 760px; margin: 0 auto; padding: 16px; }
+main.wide { max-width: 1280px; }
+h1 { font-size: 26px; margin: 8px 0 4px; } h2 { font-size: 20px; margin: 18px 0 8px; } h3 { font-size: 16px; margin: 14px 0 6px; }
+p { margin: 6px 0; } .muted { color: var(--muted); } .small { font-size: 13px; }
+button, select, input { font: inherit; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 0; border-radius: 12px; padding: 12px 16px; font-weight: 700; cursor: pointer; background: var(--blue); color: #fff; min-height: 46px; }
+.btn.gold { background: var(--gold); color: #1a1a1a; } .btn.ghost { background: var(--soft); color: var(--ink); }
+.btn.ok { background: var(--ok); } .btn.warn { background: var(--warn); }
+.btn:disabled { opacity: .45; cursor: default; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.row > .grow { flex: 1; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
+.tile { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; cursor: pointer; text-align: left; color: var(--ink); }
+.tile b { display: block; font-size: 17px; } .tile .muted { font-size: 14px; }
+.tile .bar { height: 6px; background: var(--soft); border-radius: 4px; margin-top: 10px; overflow: hidden; }
+.tile .bar i { display: block; height: 100%; background: var(--gold); }
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin: 12px 0; }
+.flash { background: var(--card); border: 2px solid var(--line); border-radius: 18px; padding: 22px 18px; min-height: 220px; cursor: pointer; user-select: none; }
+.flash .front { font-size: 22px; font-weight: 800; }
+.flash .hint { color: var(--muted); font-size: 14px; margin-top: 18px; }
+.flash.revealed { border-color: var(--gold); cursor: default; }
+.label { font-size: 12px; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); font-weight: 700; margin-top: 10px; }
+.chip { display: inline-block; font-size: 12px; background: var(--soft); border-radius: 999px; padding: 2px 10px; color: var(--muted); }
+dl { margin: 0; } dt { font-weight: 700; margin-top: 10px; } dd { margin: 2px 0 0; }
+ul { padding-left: 20px; margin: 6px 0; }
+.controls { position: sticky; bottom: 0; background: linear-gradient(transparent, var(--bg) 30%); padding: 14px 0 10px; }
+.controls .btn { flex: 1; }
+.center { text-align: center; }
+.signin { max-width: 440px; margin: 10vh auto; text-align: center; }
+.err { color: var(--warn); font-weight: 600; }
+input[type=text] { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font-size: 18px; }
+select { padding: 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); color: var(--ink); }
+.ex { border-left: 4px solid var(--line); padding: 4px 10px; margin: 8px 0; }
+.ex.strong { border-color: var(--ok); } .ex.weak { border-color: var(--warn); }
+/* live room */
+.code { font-size: 64px; font-weight: 900; letter-spacing: 10px; color: var(--blue); }
+@media (prefers-color-scheme: dark) { .code { color: var(--gold); } }
+.teams { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+.team { border-radius: 14px; padding: 12px; color: #fff; text-align: center; }
+.team b { font-size: 15px; display: block; } .team .pts { font-size: 36px; font-weight: 900; line-height: 1.1; }
+.team .ppl { font-size: 12px; opacity: .9; }
+.t0 { background: #2f5fb3; } .t1 { background: #b8860b; } .t2 { background: #2e8b57; } .t3 { background: #b03a48; }
+.host-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+@media (max-width: 900px) { .host-grid { grid-template-columns: 1fr; } .code { font-size: 44px; } }
+.projector .flash .front { font-size: 40px; } .projector .flash { min-height: 300px; font-size: 22px; }
+.buzz { display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 10px; background: var(--soft); margin: 6px 0; }
+.buzz .grow { flex: 1; }
+.buzzbtn { width: 100%; min-height: 140px; font-size: 32px; border-radius: 24px; }
+.timer { font-size: 34px; font-weight: 900; font-variant-numeric: tabular-nums; }
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand" id="brand">Study app <span>demo</span></div>
+  <div class="who" id="who"></div>
+  <button id="signout" class="hidden">Sign out</button>
+</header>
+<div style="background:#fff7dd;color:#3a2f00;padding:8px 16px;font-size:14px;text-align:center">Demo with made-up sample content. Progress stays in this browser and nothing is sent anywhere. <a href="/work/gsi-study-app/" target="_top" style="color:#003262;font-weight:700">Back to the case study</a></div>
+<main id="app"><p class="muted center">Loading...</p></main>
+
+<script>
+(function () {
+  "use strict";
+  var SUPABASE_URL = "";
+  var SUPABASE_KEY = "";
+  var DOMAIN = "@berkeley.edu";
+  var TEAMS = ["Blue", "Gold", "Green", "Red"];
+  var DECK_ORDER = ["terms", "sources", "nameThat", "agents", "essays"];
+  var LIVE_DECKS = ["terms", "nameThat", "sources", "agents"];
+
+  // Demo only: a stand-in for the realtime client. Rooms sync between tabs of
+  // this browser with BroadcastChannel; nothing is sent over the network.
+  var sb = (function () {
+    function Chan(name, cfg) {
+      var self = this;
+      this.key = (cfg && cfg.config && cfg.config.presence && cfg.config.presence.key) || Math.random().toString(36).slice(2);
+      this.hb = {}; this.hp = []; this.state = {}; this.mine = null;
+      this.bc = ("BroadcastChannel" in window) ? new BroadcastChannel("studydemo:" + name) : null;
+      if (this.bc) this.bc.onmessage = function (e) { self.recv(e.data); };
+    }
+    Chan.prototype.on = function (type, filt, cb) { if (type === "broadcast") this.hb[filt.event] = cb; else if (type === "presence") this.hp.push(cb); return this; };
+    Chan.prototype.sync = function () { this.hp.forEach(function (cb) { cb(); }); };
+    Chan.prototype.post = function (m) { if (this.bc) this.bc.postMessage(m); };
+    Chan.prototype.recv = function (m) {
+      if (m.k === "b") { var cb = this.hb[m.event]; if (cb) cb({ payload: m.payload }); }
+      else if (m.k === "p") {
+        if (m.payload) this.state[m.key] = [m.payload]; else if (m.key !== this.key) delete this.state[m.key];
+        this.sync();
+        if (m.ask && this.mine) this.post({ k: "p", key: this.key, payload: this.mine });
+      }
+    };
+    Chan.prototype.subscribe = function (cb) { var s = this; setTimeout(function () { s.post({ k: "p", key: s.key, payload: null, ask: true }); cb("SUBSCRIBED"); }, 0); return this; };
+    Chan.prototype.send = function (m) { this.post({ k: "b", event: m.event, payload: m.payload }); return Promise.resolve("ok"); };
+    Chan.prototype.track = function (p) { this.mine = p; this.state[this.key] = [p]; this.post({ k: "p", key: this.key, payload: p }); this.sync(); return Promise.resolve("ok"); };
+    Chan.prototype.presenceState = function () { return this.state; };
+    Chan.prototype.close = function () { if (this.mine) this.post({ k: "p", key: this.key, payload: null }); if (this.bc) this.bc.close(); };
+    var open = [];
+    window.addEventListener("pagehide", function () { open.forEach(function (c) { try { c.close(); } catch (e) {} }); });
+    return {
+      channel: function (n, c) { var ch = new Chan(n, c); open.push(ch); return ch; },
+      removeChannel: function (ch) { ch.close(); },
+      auth: { signOut: function () { return Promise.resolve(); } }
+    };
+  })();
+  var app = document.getElementById("app");
+  var C = null;          // content (loaded only after sign-in)
+  var USER = null;
+  var live = null;       // live room state
+  var DEMO = true;
+
+  // ---------- storage (works when blocked) ----------
+  var mem = {};
+  var store = (function () {
+    try { var k = "__studydemo"; localStorage.setItem(k, "1"); localStorage.removeItem(k); return localStorage; }
+    catch (e) { return null; }
+  })();
+  function sget(k, d) {
+    try { var v = store ? store.getItem(k) : mem[k]; return v == null ? d : JSON.parse(v); } catch (e) { return d; }
+  }
+  function sset(k, v) {
+    var s = JSON.stringify(v);
+    try { if (store) store.setItem(k, s); else mem[k] = s; } catch (e) { mem[k] = s; }
+  }
+  var PKEY = "studydemo:progress:v1";
+  function prog() { return sget(PKEY, {}); }
+  function mastered(deck) { var p = prog(); return (p[deck] && p[deck].m) || []; }
+  function setMastered(deck, list) { var p = prog(); p[deck] = { m: list }; sset(PKEY, p); }
+
+  // ---------- helpers ----------
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function h(html) { app.innerHTML = html; window.scrollTo(0, 0); }
+  function $(s) { return app.querySelector(s); }
+  function on(sel, ev, fn) { var el = $(sel); if (el) el.addEventListener(ev, fn); }
+  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  var MYKEY = "studydemo:mycards:v1";
+  function myCards() { return sget(MYKEY, []); }
+  function setMyCards(list) { sset(MYKEY, list); }
+  function deck(k) {
+    if (k === "mine") return { title: "My cards", blurb: "Write your own cards. They stay on this device only.", cards: myCards() };
+    return C.decks[k];
+  }
+  function cardById(k, id) { var cs = deck(k).cards || deck(k).prompts; for (var i = 0; i < cs.length; i++) if (cs[i].id === id) return cs[i]; return null; }
+  function cardsOf(k) { return deck(k).cards || deck(k).prompts; }
+  function setWide(w) { app.className = w ? "wide" : ""; }
+
+  // ---------- usage tracking ----------
+  // Browsers can only insert rows (see RLS); the GSI dashboard reads them server-side.
+  // Active time counts only while the tab is visible and the student interacted in the last 2 minutes.
+  var SCALE = DEMO && /[?&]fast=1/.test(location.search) ? 10 : 1;  // local tests only: 1 tick = 100ms
+  var IDLE_TICKS = 120, BEAT_TICKS = 30;
+  var T = { sid: null, token: null, ready: null, active: 0, ticks: 0, idle: 0, timer: null, wired: false };
+  function uuid() {
+    try { if (crypto.randomUUID) return crypto.randomUUID(); } catch (e) {}
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) { var r = Math.random() * 16 | 0; return (c === "x" ? r : (r & 3 | 8)).toString(16); });
+  }
+  function deviceType() {
+    var ua = navigator.userAgent || "";
+    if (/iPad|Tablet/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return "tablet";
+    if (/Mobi|Android|iPhone/i.test(ua)) return "phone";
+    return "desktop";
+  }
+  function insert(table, row) {
+    if (DEMO) { (window.__studydemo_rows = window.__studydemo_rows || []).push({ table: table, row: row, at: Date.now() }); return Promise.resolve(); }
+    return sb.from(table).insert(row).then(function (r) { if (r.error) console.warn("tracking:", r.error.message); });
+  }
+  function beacon(table, row) {
+    // keepalive fetch survives the page closing, unlike a normal request
+    if (DEMO) { (window.__studydemo_rows = window.__studydemo_rows || []).push({ table: table, row: row, at: Date.now(), beacon: true }); return; }
+    if (!T.token) return;
+    try {
+      fetch(SUPABASE_URL + "/rest/v1/" + table, { method: "POST", keepalive: true,
+        headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + T.token, "Content-Type": "application/json", Prefer: "return=minimal" },
+        body: JSON.stringify(row) }).catch(function () {});
+    } catch (e) {}
+  }
+  function track(type, fields) {
+    if (!T.sid) return;
+    var row = { session_id: T.sid, type: type };
+    for (var k in fields) row[k] = fields[k];
+    T.ready.then(function () { insert("events", row); });
+  }
+  function vaEvent(name, data) { try { window.va("event", { name: name, data: data }); } catch (e) {} }
+  function flushActive(useBeacon) {
+    if (!T.sid || T.active <= 0) return;
+    var row = { session_id: T.sid, type: "heartbeat", active_seconds: Math.min(T.active, 120) };
+    T.active = 0;
+    if (useBeacon) beacon("events", row); else T.ready.then(function () { insert("events", row); });
+  }
+  function startTracking() {
+    if (T.sid) return;
+    T.sid = uuid();
+    T.ready = insert("sessions", { id: T.sid, device: deviceType() });
+    T.idle = 0;
+    if (!T.timer) T.timer = setInterval(function () {
+      if (!T.sid) return;
+      T.ticks++; T.idle++;
+      if (document.visibilityState === "visible" && T.idle <= IDLE_TICKS) T.active++;
+      if (T.ticks % BEAT_TICKS === 0) flushActive(false);
+    }, 1000 / SCALE);
+    if (T.wired) return;
+    T.wired = true;
+    ["pointerdown", "keydown", "scroll", "touchstart", "wheel"].forEach(function (evName) {
+      window.addEventListener(evName, function () { T.idle = 0; }, { passive: true, capture: true });
+    });
+    document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") flushActive(true); else T.idle = 0; });
+    window.addEventListener("pagehide", function () {
+      if (!T.sid) return;
+      flushActive(true);
+      beacon("events", { session_id: T.sid, type: "session_end" });
+      T.sid = null;
+    });
+    window.addEventListener("pageshow", function (e) { if (e.persisted && !T.sid) startTracking(); });
+  }
+  function stopTracking() {
+    if (T.sid) { flushActive(true); beacon("events", { session_id: T.sid, type: "session_end" }); }
+    T.sid = null;
+  }
+
+  // ---------- auth ----------
+  function showSignIn(msg) {
+    setWide(false);
+    document.getElementById("signout").classList.add("hidden");
+    document.getElementById("who").textContent = "";
+    h('<div class="signin panel">' +
+      '<h1>Study app demo</h1>' +
+      '' +
+      (msg ? '<p class="err">' + esc(msg) + '</p>' : '') +
+      '<p><button class="btn gold" id="g">Sign in with Berkeley Google</button></p>' +
+      '</div>');
+    on("#g", "click", function () {
+      sb.auth.signInWithOAuth({ provider: "google", options: { redirectTo: location.origin + location.pathname, queryParams: { hd: "berkeley.edu", prompt: "select_account" } } })
+        .then(function (r) { if (r.error) showSignIn("Sign-in is not available yet. Please try again in a few minutes."); });
+    });
+  }
+
+  function urlError() {
+    var q = new URLSearchParams(location.search + "&" + location.hash.replace(/^#/, ""));
+    var e = q.get("error_description") || q.get("error");
+    if (e) { history.replaceState(null, "", location.pathname); return "Only @berkeley.edu accounts can sign in. Please use your Berkeley Google account."; }
+    return null;
+  }
+
+  function boot() {
+    var uerr = urlError();
+    sb.auth.getSession().then(function (r) {
+      var s = r.data && r.data.session;
+      if (!s) return showSignIn(uerr);
+      var email = (s.user.email || "").toLowerCase();
+      if (email.slice(-DOMAIN.length) !== DOMAIN) {
+        return sb.auth.signOut().then(function () { showSignIn("Only @berkeley.edu accounts can sign in. Please use your Berkeley Google account."); });
+      }
+      USER = { email: email, id: s.user.id };
+      T.token = s.access_token;
+      sb.auth.onAuthStateChange(function (_e, sess) { T.token = sess ? sess.access_token : null; });
+      sb.from("content").select("data").eq("id", 1).maybeSingle().then(function (res) {
+        if (res.error || !res.data) return showSignIn("Could not load the review content. Try signing out and back in.");
+        start(res.data.data, USER);
+      });
+    });
+  }
+
+  function start(content, user) {
+    C = content; USER = user;
+    document.getElementById("who").textContent = user.email;
+    var so = document.getElementById("signout");
+    so.onclick = function () { leaveLive(); stopTracking(); sb.auth.signOut().then(function () { C = null; showSignIn(); }); };
+    document.getElementById("brand").onclick = function () { leaveLive(); home(); };
+    startTracking();
+    home();
+  }
+
+  // ---------- home ----------
+  function home() {
+    setWide(false);
+    var tiles = DECK_ORDER.map(function (k, i) {
+      var d = deck(k), n = cardsOf(k).length, m = mastered(k).length;
+      return '<button class="tile" data-deck="' + k + '"><span class="chip">Deck ' + (i + 1) + '</span><b>' + esc(d.title) + '</b>' +
+        '<span class="muted">' + esc(d.blurb) + '</span><div class="small muted" style="margin-top:6px">' + m + '/' + n + ' mastered</div>' +
+        '<div class="bar"><i style="width:' + Math.round(100 * m / n) + '%"></i></div></button>';
+    }).join("");
+    var mc = myCards().length, mm = mastered("mine").length;
+    tiles += '<button class="tile" id="mine"><span class="chip">Your own</span><b>My cards</b><span class="muted">Write your own cards to study. Only you can see them.</span>' +
+      '<div class="small muted" style="margin-top:6px">' + (mc ? mm + '/' + mc + ' mastered' : 'No cards yet') + '</div>' +
+      '<div class="bar"><i style="width:' + (mc ? Math.round(100 * mm / mc) : 0) + '%"></i></div></button>';
+    h('<h1>' + esc(C.meta.title) + '</h1><p class="muted">' + esc(C.meta.course) + ' &middot; Midterm ' + esc(C.meta.exam) + '</p>' +
+      '<div class="grid" style="margin-top:14px"><button class="tile" id="intro"><span class="chip">Start here</span><b>How the exam works</b><span class="muted">Format, contextualize vs. analyze, and the 5 W\'s.</span></button>' + tiles + '</div>' +
+      '<h2>Play together</h2><div class="row"><button class="btn gold grow" id="join">Join a game</button><button class="btn ghost grow" id="host">Host (projector)</button></div>' +
+      '<p class="small muted" style="margin-top:18px">Demo: progress is saved in this browser only. To try the game, open this page in a second tab: host in one, join in the other.</p>');
+    on("#intro", "click", intro);
+    on("#join", "click", joinScreen);
+    on("#host", "click", hostSetup);
+    on("#mine", "click", function () { myCardsScreen(); });
+    app.querySelectorAll("[data-deck]").forEach(function (b) { b.addEventListener("click", function () { study(b.getAttribute("data-deck")); }); });
+  }
+
+  function intro() {
+    var I = C.intro, cv = I.contextVsAnalyze;
+    h('<p><button class="btn ghost" id="back">&larr; Home</button></p><h1>How the exam works</h1>' +
+      '<div class="panel"><h2>Format</h2><ul>' + I.format.map(function (f) { return '<li>' + esc(f) + '</li>'; }).join("") + '</ul></div>' +
+      '<div class="panel"><h2>Contextualize vs. analyze</h2><p><b>' + esc(cv.contextualize) + '</b></p><p><b>' + esc(cv.analyze) + '</b></p>' +
+      cv.examples.map(function (e) { var cls = /weak/i.test(e.label) ? "weak" : "strong"; return '<div class="ex ' + cls + '"><div class="label">' + esc(e.label) + '</div>' + esc(e.text) + '</div>'; }).join("") + '</div>' +
+      '<div class="panel"><h2>The 5 W\'s</h2><dl>' + I.fiveWs.map(function (w) { return '<dt>' + esc(w[0]) + '</dt><dd>' + esc(w[1]) + '</dd>'; }).join("") + '</dl></div>' +
+      '<div class="panel"><h2>How to study here</h2><p>' + esc(I.howToStudy) + '</p></div>');
+    on("#back", "click", home);
+  }
+
+  // ---------- card renderers ----------
+  function front(k, c) {
+    if (k === "mine") return '<div class="front" style="white-space:pre-wrap">' + esc(c.front) + '</div>';
+    if (k === "terms") return '<div class="front">' + esc(c.term) + '</div>';
+    if (k === "sources") return '<div class="front">' + esc(c.name) + '</div><p class="muted">Give the 5 W\'s, the context, and the significance.</p>';
+    if (k === "nameThat") return '<div class="label">' + esc(c.kind) + '</div><div class="front" style="font-weight:600">' + esc(c.text) + '</div>';
+    if (k === "agents") return '<div class="front">' + esc(c.agent) + '</div><p class="muted">' + esc(c.realm) + '. Define it and give examples from different weeks.</p>';
+    if (k === "essays") return '<div class="label">Practice prompt</div><div class="front" style="font-size:19px;font-weight:600">' + esc(c.q) + '</div><p class="muted">Outline a thesis and three body paragraphs before revealing.</p>';
+    return "";
+  }
+  function back(k, c) {
+    if (k === "mine") return '<p style="white-space:pre-wrap">' + esc(c.back) + '</p>';
+    if (k === "terms") return '<div class="label">Definition</div><p>' + esc(c.def) + '</p><div class="label">Why it matters</div><p>' + esc(c.sig) + '</p>';
+    if (k === "sources") {
+      var P = deck("sources").panels;
+      return '<dl>' + P.map(function (p) { return '<dt>' + esc(p) + '</dt><dd>' + esc(c[p.toLowerCase()]) + '</dd>'; }).join("") +
+        '<dt>Use it in an essay</dt><dd>' + esc(c.use) + '</dd></dl>';
+    }
+    if (k === "nameThat") return '<div class="label">Source</div><p><b>' + esc(c.answer) + '</b></p><div class="label">How you could tell</div><p>' + esc(c.clue) + '</p>';
+    if (k === "agents") return '<p>' + esc(c.def) + '</p><div class="label">Examples</div><ul>' + c.examples.map(function (e) { return '<li>' + esc(e) + '</li>'; }).join("") + '</ul><div class="label">Ask yourself</div><p>' + esc(c.ask) + '</p>';
+    if (k === "essays") return '<div class="label">Sample thesis</div><p>' + esc(c.thesis) + '</p>' + c.bodies.map(function (b, i) { return '<div class="label">Body ' + (i + 1) + '</div><p>' + esc(b) + '</p>'; }).join("") + '<div class="label">Conclusion</div><p>' + esc(c.conclusion) + '</p>';
+    return "";
+  }
+
+  // ---------- solo study ----------
+  var S = null;
+  function study(k) {
+    var savedWeek = sget("studydemo:week:" + k, "all");
+    S = { k: k, week: savedWeek, shuffle: sget("studydemo:shuffle", false), queue: [], cur: null, revealed: false, step: -1 };
+    buildQueue();
+    track("deck_started", { deck: k });
+    vaEvent("deck_opened", { deck: k });
+    renderStudy();
+  }
+  var ESSAY_STEPS = [["intro", "Intro and thesis"], ["body1", "Body 1"], ["body2", "Body 2"], ["body3", "Body 3"], ["source", "Primary source"], ["conclusion", "Conclusion"], ["checklist", "Checklist"]];
+  function essayStepHtml(c, i) {
+    var key = ESSAY_STEPS[i][0], html;
+    if (key === "intro") html = '<p>' + esc(c.thesis) + '</p>';
+    else if (key === "source") {
+      var src = c.bodies.filter(function (b) { return /^Source paragraph/.test(b); })[0];
+      html = '<p>Discuss your source in detail: who wrote it, when, why, and what it shows about your thesis. Do not just name it.</p>' + (src ? '<p class="muted">In this outline: ' + esc(src) + '</p>' : '');
+    }
+    else if (key === "conclusion") html = '<p>' + esc(c.conclusion) + '</p>';
+    else if (key === "checklist") html = '<ul>' + deck("essays").checklist.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join("") + '</ul>';
+    else html = '<p>' + esc(c.bodies[i - 1]) + '</p>';
+    return '<div class="label">' + esc(ESSAY_STEPS[i][1]) + '</div>' + html;
+  }
+  function essayAdvance(c) {
+    if (S.step >= ESSAY_STEPS.length - 1) return;
+    S.step++;
+    track("essay_step", { deck: "essays", prompt_id: c.id, step: ESSAY_STEPS[S.step][0] });
+    vaEvent("essay_builder_step", { step: ESSAY_STEPS[S.step][0] });
+    if (S.step === ESSAY_STEPS.length - 1) S.revealed = true;
+  }
+  function pool() {
+    return cardsOf(S.k).filter(function (c) { return S.week === "all" || !c.week || String(c.week) === String(S.week); });
+  }
+  function buildQueue() {
+    var m = mastered(S.k);
+    var q = pool().filter(function (c) { return m.indexOf(c.id) < 0; }).map(function (c) { return c.id; });
+    S.queue = S.shuffle ? shuffle(q) : q;
+    S.revealed = false;
+    S.step = -1;
+  }
+  function renderStudy() {
+    var k = S.k, d = deck(k), all = pool(), m = mastered(k);
+    var done = all.filter(function (c) { return m.indexOf(c.id) >= 0; }).length;
+    var hasWeeks = cardsOf(k).some(function (c) { return c.week; });
+    var weekSel = hasWeeks ? '<select id="week"><option value="all">All weeks</option>' + Object.keys(C.meta.weeks).map(function (w) {
+      return '<option value="' + w + '"' + (String(S.week) === w ? " selected" : "") + '>' + esc(C.meta.weeks[w]) + '</option>'; }).join("") + '</select>' : "";
+    var id = S.queue[0], c = id ? cardById(k, id) : null;
+    var body;
+    if (!c) {
+      body = '<div class="panel center"><h2>All mastered!</h2><p class="muted">You marked every card in this set as Got it.</p><p><button class="btn" id="restart2">Study them again</button></p></div>';
+    } else if (k === "essays") {
+      var shown = "";
+      for (var si = 0; si <= S.step; si++) shown += essayStepHtml(c, si);
+      body = '<div class="flash' + (S.revealed ? " revealed" : "") + '" id="card">' + front(k, c) +
+        (S.step >= 0 ? '<hr style="border:0;border-top:1px solid var(--line);margin:16px 0">' + shown : '<div class="hint">Outline it in your head or on paper, then step through the sample.</div>') + '</div>' +
+        '<div class="controls row">' + (S.revealed ?
+          '<button class="btn warn" id="again">Review again</button><button class="btn ok" id="got">Got it</button>' :
+          '<button class="btn gold" id="reveal">Next: ' + esc(ESSAY_STEPS[S.step + 1][1]) + '</button>') + '</div>';
+    } else {
+      body = '<div class="flash' + (S.revealed ? " revealed" : "") + '" id="card">' + front(k, c) +
+        (S.revealed ? '<hr style="border:0;border-top:1px solid var(--line);margin:16px 0">' + back(k, c) : '<div class="hint">Say your answer, then tap to reveal.</div>') + '</div>' +
+        '<div class="controls row">' + (S.revealed ?
+          '<button class="btn warn" id="again">Review again</button><button class="btn ok" id="got">Got it</button>' :
+          '<button class="btn gold" id="reveal">Reveal</button>') + '</div>';
+    }
+    if (k === "mine" && !cardsOf(k).length) body = '<div class="panel center"><h2>No cards yet</h2><p class="muted">Add a few cards first.</p><p><button class="btn gold" id="edit2">Add cards</button></p></div>';
+    var extra = k === "essays" ? '<details class="panel"><summary><b>Essay checklist</b></summary><ul>' + d.checklist.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join("") + '</ul></details>' : "";
+    h('<div class="row"><button class="btn ghost" id="back">&larr; Home</button><div class="grow"></div><span class="chip" id="count">' + done + '/' + all.length + ' mastered</span></div>' +
+      '<h1>' + esc(d.title) + '</h1>' +
+      '<div class="row small" style="margin-bottom:10px">' + weekSel +
+      '<label class="row" style="gap:4px"><input type="checkbox" id="shuf"' + (S.shuffle ? " checked" : "") + '> Shuffle</label>' +
+      '<button class="btn ghost" id="restart" style="min-height:36px;padding:6px 12px">Restart</button>' +
+      '<button class="btn ghost" id="reset" style="min-height:36px;padding:6px 12px">Reset my progress</button>' +
+      (k === "mine" ? '<button class="btn ghost" id="edit" style="min-height:36px;padding:6px 12px">Edit my cards</button>' : '') + '</div>' +
+      extra + body);
+    on("#back", "click", home);
+    on("#edit", "click", function () { myCardsScreen(); });
+    on("#edit2", "click", function () { myCardsScreen(); });
+    function advance() { if (k === "essays") essayAdvance(c); else S.revealed = true; renderStudy(); }
+    on("#card", "click", function () { if (!S.revealed) advance(); });
+    on("#reveal", "click", function (e) { e.stopPropagation(); advance(); });
+    on("#got", "click", function () {
+      var mm = mastered(k); if (mm.indexOf(id) < 0) mm.push(id); setMastered(k, mm);
+      track("card_result", { deck: k, card_id: id, result: "got_it" });
+      S.queue.shift(); S.revealed = false; S.step = -1;
+      if (!S.queue.length) { track("deck_finished", { deck: k }); vaEvent("deck_completed", { deck: k }); }
+      renderStudy();
+    });
+    on("#again", "click", function () {
+      track("card_result", { deck: k, card_id: id, result: "review_again" });
+      S.queue.shift(); var pos = Math.min(S.queue.length, 3); S.queue.splice(pos, 0, id); S.revealed = false; S.step = -1; renderStudy();
+    });
+    on("#week", "change", function (e) { S.week = e.target.value; sset("studydemo:week:" + k, S.week); buildQueue(); renderStudy(); });
+    on("#shuf", "change", function (e) { S.shuffle = e.target.checked; sset("studydemo:shuffle", S.shuffle); buildQueue(); renderStudy(); });
+    on("#restart", "click", function () { buildQueue(); renderStudy(); });
+    on("#restart2", "click", function () { var ids = pool().map(function (c) { return c.id; }); setMastered(k, mastered(k).filter(function (x) { return ids.indexOf(x) < 0; })); buildQueue(); renderStudy(); });
+    on("#reset", "click", function () { if (confirm("Reset your progress for this deck?")) { setMastered(k, []); buildQueue(); renderStudy(); } });
+  }
+
+  // ---------- my cards ----------
+  function myCardsScreen(editId) {
+    setWide(false);
+    var list = myCards(), editing = null;
+    list.forEach(function (c) { if (c.id === editId) editing = c; });
+    h('<div class="row"><button class="btn ghost" id="back">&larr; Home</button><div class="grow"></div>' +
+      (list.length ? '<button class="btn gold" id="studyMine">Study my cards (' + list.length + ')</button>' : '') + '</div>' +
+      '<h1>My cards</h1><p class="muted small">Your cards are saved on this device only. Nobody else can see them, and they do not move to your other devices.' +
+      (store ? '' : ' <b>This browser is blocking storage, so your cards will be lost when you close the page.</b>') + '</p>' +
+      '<div class="panel"><div class="label">' + (editing ? 'Edit card' : 'New card') + '</div>' +
+      '<div class="label">Front (term or question)</div><textarea id="mf" rows="2" maxlength="300" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit">' + esc(editing ? editing.front : "") + '</textarea>' +
+      '<div class="label">Back (answer, definition, why it matters)</div><textarea id="mb" rows="4" maxlength="1500" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit">' + esc(editing ? editing.back : "") + '</textarea>' +
+      '<p class="err small hidden" id="merr">Fill in both sides.</p>' +
+      '<div class="row" style="margin-top:10px"><button class="btn gold grow" id="save">' + (editing ? 'Save changes' : 'Add card') + '</button>' +
+      (editing ? '<button class="btn ghost" id="cancel">Cancel</button>' : '') + '</div></div>' +
+      (list.length ? '<h2>Your cards</h2>' + list.map(function (c) {
+        return '<div class="panel" style="padding:12px"><b style="white-space:pre-wrap">' + esc(c.front) + '</b><p class="muted small" style="white-space:pre-wrap">' + esc(c.back) + '</p>' +
+          '<div class="row"><button class="btn ghost" data-edit="' + esc(c.id) + '" style="min-height:34px;padding:4px 12px">Edit</button>' +
+          '<button class="btn ghost" data-del="' + esc(c.id) + '" style="min-height:34px;padding:4px 12px">Delete</button></div></div>';
+      }).join("") : ''));
+    on("#back", "click", home);
+    on("#studyMine", "click", function () { study("mine"); });
+    on("#cancel", "click", function () { myCardsScreen(); });
+    on("#save", "click", function () {
+      var f = $("#mf").value.trim(), b = $("#mb").value.trim();
+      if (!f || !b) { $("#merr").classList.remove("hidden"); return; }
+      var cur = myCards();
+      if (editing) cur = cur.map(function (c) { return c.id === editing.id ? { id: c.id, front: f, back: b } : c; });
+      else cur.push({ id: "m" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), front: f, back: b });
+      setMyCards(cur);
+      myCardsScreen();
+      var mf = $("#mf"); if (mf) mf.focus();
+    });
+    app.querySelectorAll("[data-edit]").forEach(function (x) { x.onclick = function () { myCardsScreen(x.getAttribute("data-edit")); }; });
+    app.querySelectorAll("[data-del]").forEach(function (x) {
+      x.onclick = function () {
+        if (!confirm("Delete this card?")) return;
+        var id = x.getAttribute("data-del");
+        setMyCards(myCards().filter(function (c) { return c.id !== id; }));
+        setMastered("mine", mastered("mine").filter(function (m) { return m !== id; }));
+        myCardsScreen();
+      };
+    });
+  }
+
+  // ---------- live room ----------
+  function makeCode() { var a = "ABCDEFGHJKLMNPQRSTUVWXYZ", s = ""; for (var i = 0; i < 4; i++) s += a[Math.floor(Math.random() * a.length)]; return s; }
+  var CID = Math.random().toString(36).slice(2, 10);
+  function myId() { return CID; }
+  function leaveLive() {
+    if (live && live.ch) { try { sb.removeChannel(live.ch); } catch (e) {} }
+    if (live && live.tick) clearInterval(live.tick);
+    live = null;
+  }
+  function openChannel(code, presence) {
+    var ch = sb.channel("studydemo-room-" + code, { config: { broadcast: { self: false }, presence: { key: myId() } } });
+    ch.on("presence", { event: "sync" }, function () { if (live) { live.people = ch.presenceState(); live.onPresence && live.onPresence(); } });
+    return { ch: ch, track: function () { return ch.track(presence); } };
+  }
+
+  function hostSetup() {
+    setWide(false);
+    h('<p><button class="btn ghost" id="back">&larr; Home</button></p><h1>Host a game</h1>' +
+      '<div class="panel"><div class="label">Deck</div><select id="hd">' + LIVE_DECKS.map(function (k) { return '<option value="' + k + '">' + esc(deck(k).title) + '</option>'; }).join("") + '</select>' +
+      '<div class="label">Week</div><select id="hw"><option value="all">All weeks</option>' + Object.keys(C.meta.weeks).map(function (w) { return '<option value="' + w + '">' + esc(C.meta.weeks[w]) + '</option>'; }).join("") + '</select>' +
+      '<div class="label">Teams</div><select id="ht"><option>2</option><option>3</option><option selected>4</option></select>' +
+      '<p style="margin-top:14px"><button class="btn gold" id="go">Open room</button></p></div>');
+    on("#back", "click", home);
+    on("#go", "click", function () { hostStart($("#hd").value, $("#hw").value, parseInt($("#ht").value, 10)); });
+  }
+
+  function hostStart(k, week, nTeams) {
+    leaveLive();
+    var ids = shuffle(cardsOf(k).filter(function (c) { return week === "all" || !c.week || String(c.week) === week; }).map(function (c) { return c.id; }));
+    var code = makeCode();
+    var scores = {}; TEAMS.slice(0, nTeams).forEach(function (t) { scores[t] = 0; });
+    live = { role: "host", code: code, people: {}, st: { deck: k, ids: ids, idx: 0, revealed: false, scores: scores, buzzes: [], timerEnd: 0, teams: TEAMS.slice(0, nTeams) } };
+    var o = openChannel(code, { role: "host" });
+    live.ch = o.ch;
+    function send() { live.ch.send({ type: "broadcast", event: "state", payload: live.st }); renderHost(); }
+    live.send = send;
+    o.ch.on("broadcast", { event: "hello" }, function () { send(); })
+      .on("broadcast", { event: "buzz" }, function (m) {
+        var p = m.payload, st = live.st;
+        if (p.idx !== st.idx || st.revealed) return;
+        if (st.buzzes.some(function (b) { return b.pid === p.pid; })) return;
+        st.buzzes.push({ pid: p.pid, name: String(p.name || "").slice(0, 24), team: p.team });
+        send();
+      })
+      .subscribe(function (status) { if (status === "SUBSCRIBED") { o.track(); send(); } });
+    live.onPresence = renderHost;
+    live.tick = setInterval(function () { var t = $("#timer"); if (t) t.textContent = timerText(live.st.timerEnd); }, 250);
+    renderHost();
+  }
+  function timerText(end) { if (!end) return "--"; var s = Math.max(0, Math.ceil((end - Date.now()) / 1000)); return s + "s"; }
+  function teamPeople() {
+    var out = {}; var ps = (live && live.people) || {};
+    Object.keys(ps).forEach(function (key) { (ps[key] || []).forEach(function (p) { if (p.role === "player") out[p.team] = (out[p.team] || 0) + 1; }); });
+    return out;
+  }
+  function scoreboard(st, people) {
+    return '<div class="teams">' + st.teams.map(function (t, i) {
+      return '<div class="team t' + i + '"><b>' + esc(t) + '</b><div class="pts">' + (st.scores[t] || 0) + '</div>' + (people ? '<div class="ppl">' + (people[t] || 0) + ' players</div>' : '') + '</div>';
+    }).join("") + '</div>';
+  }
+  function renderHost() {
+    if (!live || live.role !== "host") return;
+    setWide(true);
+    var st = live.st, k = st.deck, id = st.ids[st.idx], c = id ? cardById(k, id) : null, ppl = teamPeople();
+    var total = Object.keys(ppl).reduce(function (a, t) { return a + ppl[t]; }, 0);
+    h('<div class="projector"><div class="row"><button class="btn ghost" id="end">End game</button><div class="grow"></div>' +
+      '<div class="center"><div class="small muted">Join at this site, tap Join a game, enter</div><div class="code">' + esc(live.code) + '</div></div><div class="grow"></div>' +
+      '<div class="center"><div class="small muted">Timer</div><div class="timer" id="timer">' + timerText(st.timerEnd) + '</div></div></div>' +
+      '<div class="host-grid" style="margin-top:12px"><div>' +
+      '<div class="small muted">' + esc(deck(k).title) + ' &middot; card ' + Math.min(st.idx + 1, st.ids.length) + ' of ' + st.ids.length + ' &middot; ' + total + ' players</div>' +
+      (c ? '<div class="flash revealed">' + front(k, c) + (st.revealed ? '<hr style="border:0;border-top:1px solid var(--line);margin:16px 0">' + back(k, c) : '') + '</div>' : '<div class="panel center"><h2>End of deck</h2></div>') +
+      '<div class="row" style="margin-top:12px"><button class="btn gold" id="rev"' + (st.revealed || !c ? " disabled" : "") + '>Reveal</button>' +
+      '<button class="btn" id="next"' + (!c ? " disabled" : "") + '>Next card</button>' +
+      '<button class="btn ghost" id="t30">30s timer</button><button class="btn ghost" id="t60">60s timer</button></div></div>' +
+      '<div><h3>Scores</h3>' + scoreboard(st, ppl) +
+      '<div class="row small" style="margin-top:8px">' + st.teams.map(function (t, i) { return '<button class="btn ghost" data-plus="' + i + '" style="min-height:34px;padding:4px 10px">+1 ' + esc(t) + '</button><button class="btn ghost" data-minus="' + i + '" style="min-height:34px;padding:4px 10px">-1</button>'; }).join("") + '</div>' +
+      '<h3>Buzzes</h3>' + (st.buzzes.length ? st.buzzes.map(function (b, i) {
+        var ti = st.teams.indexOf(b.team);
+        return '<div class="buzz"><b>' + (i + 1) + '.</b><span class="grow">' + esc(b.name) + ' <span class="chip">' + esc(b.team) + '</span></span><button class="btn ok" data-award="' + ti + '" style="min-height:34px;padding:4px 10px">+1</button></div>';
+      }).join("") : '<p class="muted small">No buzzes yet.</p>') + '</div></div></div>');
+    on("#end", "click", function () { leaveLive(); home(); });
+    on("#rev", "click", function () { st.revealed = true; live.send(); });
+    on("#next", "click", function () { st.idx++; st.revealed = false; st.buzzes = []; st.timerEnd = 0; live.send(); });
+    on("#t30", "click", function () { st.timerEnd = Date.now() + 30000; live.send(); });
+    on("#t60", "click", function () { st.timerEnd = Date.now() + 60000; live.send(); });
+    function bump(i, d) { var t = st.teams[i]; if (t) { st.scores[t] = (st.scores[t] || 0) + d; live.send(); } }
+    app.querySelectorAll("[data-plus]").forEach(function (b) { b.onclick = function () { bump(+b.getAttribute("data-plus"), 1); }; });
+    app.querySelectorAll("[data-minus]").forEach(function (b) { b.onclick = function () { bump(+b.getAttribute("data-minus"), -1); }; });
+    app.querySelectorAll("[data-award]").forEach(function (b) { b.onclick = function () { bump(+b.getAttribute("data-award"), 1); }; });
+  }
+
+  function joinScreen(msg) {
+    leaveLive(); setWide(false);
+    var last = sget("studydemo:player", { name: "", team: "" });
+    h('<p><button class="btn ghost" id="back">&larr; Home</button></p><h1>Join a game</h1>' +
+      (typeof msg === "string" ? '<p class="err">' + esc(msg) + '</p>' : '') +
+      '<div class="panel"><div class="label">Room code</div><input type="text" id="code" maxlength="4" autocapitalize="characters" autocomplete="off" placeholder="ABCD">' +
+      '<div class="label">Your name</div><input type="text" id="name" maxlength="24" value="' + esc(last.name) + '" placeholder="First name">' +
+      '<p style="margin-top:14px"><button class="btn gold" id="go" style="width:100%">Join</button></p></div>');
+    on("#back", "click", home);
+    on("#go", "click", function () {
+      var code = $("#code").value.trim().toUpperCase().replace(/[^A-Z]/g, "");
+      var name = $("#name").value.trim();
+      if (code.length !== 4 || !name) return joinScreen("Enter the 4-letter code and your name.");
+      sset("studydemo:player", { name: name, team: last.team });
+      playerConnect(code, name);
+    });
+  }
+
+  function playerConnect(code, name) {
+    live = { role: "player", code: code, name: name, team: null, st: null, people: {}, buzzedIdx: -1 };
+    var ch = sb.channel("studydemo-room-" + code, { config: { broadcast: { self: false }, presence: { key: myId() } } });
+    live.ch = ch;
+    ch.on("broadcast", { event: "state" }, function (m) {
+      var prev = live.st; live.st = m.payload;
+      if (prev && prev.idx !== live.st.idx) live.buzzedIdx = -1;
+      renderPlayer();
+    }).subscribe(function (status) {
+      if (status === "SUBSCRIBED") { ch.send({ type: "broadcast", event: "hello", payload: {} }); }
+    });
+    live.tick = setInterval(function () { var t = $("#timer"); if (t && live && live.st) t.textContent = timerText(live.st.timerEnd); }, 250);
+    renderPlayer();
+    setTimeout(function () { if (live && live.role === "player" && !live.st) { joinScreen("No game found with that code. Check the code on the projector."); } }, 6000);
+  }
+  function renderPlayer() {
+    if (!live || live.role !== "player") return;
+    setWide(false);
+    var st = live.st;
+    if (!st) { h('<p class="center muted" style="margin-top:20vh">Connecting to room ' + esc(live.code) + '...</p>'); return; }
+    if (!live.team) {
+      var saved = sget("studydemo:player", {}).team;
+      h('<h1>Pick your team</h1><p class="muted">Room ' + esc(live.code) + '</p><div class="teams">' + st.teams.map(function (t, i) {
+        return '<button class="team t' + i + ' btn" data-team="' + esc(t) + '" style="min-height:90px;font-size:20px">' + esc(t) + (saved === t ? ' (last time)' : '') + '</button>';
+      }).join("") + '</div>');
+      app.querySelectorAll("[data-team]").forEach(function (b) {
+        b.onclick = function () {
+          live.team = b.getAttribute("data-team");
+          sset("studydemo:player", { name: live.name, team: live.team });
+          live.ch.track({ role: "player", name: live.name, team: live.team });
+          renderPlayer();
+        };
+      });
+      return;
+    }
+    var k = st.deck, id = st.ids[st.idx], c = id ? cardById(k, id) : null;
+    var mine = st.buzzes.filter(function (b) { return b.pid === myId(); })[0];
+    var place = mine ? st.buzzes.indexOf(mine) + 1 : 0;
+    var canBuzz = c && !st.revealed && !mine && live.buzzedIdx !== st.idx;
+    h('<div class="row"><span class="chip">Room ' + esc(live.code) + '</span><span class="chip">' + esc(live.name) + ' &middot; ' + esc(live.team) + '</span><div class="grow"></div><span class="timer" id="timer" style="font-size:22px">' + timerText(st.timerEnd) + '</span></div>' +
+      (c ? '<div class="flash revealed" style="margin-top:10px">' + front(k, c) + (st.revealed ? '<hr style="border:0;border-top:1px solid var(--line);margin:16px 0">' + back(k, c) : '<div class="hint">Talk with your team. Buzz when you have it.</div>') + '</div>' : '<div class="panel center"><h2>Game over</h2></div>') +
+      '<p style="margin-top:12px"><button class="btn gold buzzbtn" id="buzz"' + (canBuzz ? "" : " disabled") + '>' + (place ? "You buzzed #" + place : (st.revealed ? "Answer revealed" : "BUZZ")) + '</button></p>' +
+      scoreboard(st, null) + '<p style="margin-top:14px"><button class="btn ghost" id="leave">Leave game</button></p>');
+    on("#buzz", "click", function () {
+      live.buzzedIdx = st.idx;
+      live.ch.send({ type: "broadcast", event: "buzz", payload: { pid: myId(), name: live.name, team: live.team, idx: st.idx } });
+      var b = $("#buzz"); if (b) { b.disabled = true; b.textContent = "Buzzed!"; }
+    });
+    on("#leave", "click", function () { leaveLive(); home(); });
+  }
+
+  var SAMPLE = {"meta": {"course": "Sample course: History of Public Health", "title": "Study app demo", "exam": "practice", "weeks": {"1": "Week 1: Sanitation and germs", "2": "Week 2: Vaccines", "3": "Week 3: Health and inequality"}}, "intro": {"format": ["Part 1: define key terms and say why each one matters.", "Part 2: one essay with a thesis, three examples, and one primary source discussed in detail."], "contextVsAnalyze": {"contextualize": "Contextualize: what was happening around the source when it was made.", "analyze": "Analyze: what the source shows, and how it supports your argument.", "examples": [{"label": "Weak", "text": "Snow made a map in 1854."}, {"label": "Strong", "text": "Snow's 1854 map, made while most doctors blamed bad air, tied cholera deaths to one water pump and helped move the cause of cholera to water."}]}, "fiveWs": [["Who", "Who made it, and for whom?"], ["What", "What is it?"], ["When", "When was it made?"], ["Where", "Where was it made or used?"], ["Why", "Why was it made?"]], "howToStudy": "Pick a deck and try to answer before you reveal the card. Mark Got it or Review again; missed cards come back until you master them."}, "decks": {"terms": {"title": "Key terms", "blurb": "Define it and say why it matters.", "cards": [{"id": "t1", "week": 1, "term": "Miasma theory", "def": "The older belief that diseases like cholera spread through bad air from rotting matter.", "sig": "Wrong about the cause, but it still drove sewer and sanitation reforms that saved lives."}, {"id": "t2", "week": 1, "term": "Germ theory", "def": "The idea that specific microorganisms cause specific diseases, established by Pasteur and Koch in the 1860s to 1880s.", "sig": "Shifted public health from clearing bad air to finding and stopping specific pathogens."}, {"id": "t3", "week": 1, "term": "Sanitary movement", "def": "The nineteenth-century push in Britain, led by reformers like Edwin Chadwick, for clean water, sewers, and better housing.", "sig": "Made government responsible for the conditions that cause disease."}, {"id": "t4", "week": 1, "term": "Quarantine", "def": "Separating people who may have been exposed to a disease. The word comes from the 40 days ships waited offshore in plague-era Venice.", "sig": "One of the oldest public health tools, and still a debate about liberty versus protection."}, {"id": "t5", "week": 2, "term": "Herd immunity", "def": "When enough of a population is immune that a disease cannot spread easily, which protects people who are not immune.", "sig": "Explains why vaccination is a community decision, not only a personal one."}, {"id": "t6", "week": 2, "term": "Smallpox eradication", "def": "The global campaign that ended smallpox, declared eradicated by the World Health Organization in 1980.", "sig": "The only human disease eradicated so far: proof that coordinated global action can work."}, {"id": "t7", "week": 3, "term": "Epidemiology", "def": "The study of how disease is distributed in populations, and what drives it.", "sig": "Turns individual cases into patterns that can guide action."}, {"id": "t8", "week": 3, "term": "Social determinants of health", "def": "The conditions where people are born, live, work, and age that shape their health.", "sig": "Moves attention from individual behavior to housing, income, and policy."}]}, "sources": {"title": "Primary sources", "blurb": "The 5 W's, the context, and the significance.", "panels": ["Who", "What", "When", "Where", "Why", "Context", "Significance"], "cards": [{"id": "s1", "week": 1, "name": "John Snow's cholera map", "who": "John Snow, a London physician.", "what": "A map of cholera deaths clustered around the Broad Street water pump.", "when": "1854.", "where": "Soho, London.", "why": "To show that cholera spread through water, not air.", "context": "Miasma theory dominated, and germ theory was not yet accepted.", "significance": "A founding example of epidemiology: data on a map changed a local decision, and the pump handle was removed.", "use": "Argue that evidence can overturn an accepted theory, even before anyone knows the mechanism."}, {"id": "s2", "week": 2, "name": "Jenner's Inquiry on cowpox", "who": "Edward Jenner, an English country doctor.", "what": "His report that cowpox infection protected people against smallpox.", "when": "1798.", "where": "Gloucestershire, England.", "why": "To share the results of inoculating people with cowpox.", "context": "Smallpox killed and scarred millions, and the older method, variolation, was risky.", "significance": "The start of vaccination; the word vaccine comes from vacca, Latin for cow.", "use": "Argue that a cheap intervention can change history, and discuss the ethics of testing it on a child."}, {"id": "s3", "week": 3, "name": "The Black Report", "who": "A UK working group chaired by Sir Douglas Black.", "what": "A report showing large health gaps between social classes in Britain.", "when": "1980.", "where": "United Kingdom.", "why": "Commissioned to explain inequalities that persisted despite universal care.", "context": "The National Health Service had provided care free at the point of use since 1948.", "significance": "Showed that free care alone does not close health gaps; living conditions matter.", "use": "Argue that access to care is not the same as equal health."}]}, "nameThat": {"title": "Name that source", "blurb": "Identify a source from a short description.", "cards": [{"id": "n1", "kind": "Description", "text": "A map of deaths around a single water pump in London.", "answer": "John Snow's cholera map (1854)", "clue": "A water pump plus clustered deaths: evidence against bad air."}, {"id": "n2", "kind": "Description", "text": "A country doctor reports that people who caught cowpox did not get smallpox.", "answer": "Jenner's Inquiry (1798)", "clue": "Cowpox points to the first vaccine."}, {"id": "n3", "kind": "Description", "text": "A government report finds the poorest workers die years earlier, even with free health care.", "answer": "The Black Report (1980)", "clue": "Free care, yet gaps by social class remain."}]}, "agents": {"title": "Historical agents", "blurb": "Who drove change, with examples.", "cards": [{"id": "a1", "agent": "The state", "realm": "Political", "def": "Governments protecting health through laws, funding, and enforcement.", "examples": ["Sewer building in Victorian London", "Smallpox vaccination laws", "Funding for global eradication campaigns"], "ask": "Who gained power when the state took responsibility for health, and who lost freedom?"}, {"id": "a2", "agent": "Scientists and physicians", "realm": "Knowledge", "def": "Experts whose evidence changed what societies believed about disease.", "examples": ["Snow's water pump map", "Jenner's cowpox trials", "Koch's identification of the cholera bacterium"], "ask": "How did new evidence win, or lose, against accepted beliefs?"}]}, "essays": {"title": "Essay builder", "blurb": "Build an essay one step at a time.", "checklist": ["The thesis answers the prompt and makes an argument.", "Three examples, each from a different period or place.", "One primary source discussed in detail, not just named.", "Every paragraph ties back to the thesis.", "The conclusion says why the argument matters."], "prompts": [{"id": "e1", "q": "Was public health progress driven more by science or by politics? Use at least three examples.", "thesis": "Science supplied the tools, but politics decided when, and for whom, public health advanced.", "bodies": ["Victorian sewers were built on miasma theory, which was wrong science, because politics made clean cities a priority.", "Smallpox had a vaccine from 1798, but only global cooperation in the 1960s and 1970s finished the job.", "Source paragraph: Snow's 1854 cholera map. Evidence persuaded local officials to remove one pump handle, while the belief in bad air took decades to fade."], "conclusion": "Science makes progress possible; political choices decide whether it happens."}, {"id": "e2", "q": "Does access to health care explain differences in health? Argue with three examples.", "thesis": "Access matters, but living conditions explain more of the gap than care does.", "bodies": ["Cholera deaths fell with clean water before any cure existed.", "Smallpox fell where vaccination reached everyone, which shows prevention works best when it is universal.", "Source paragraph: the Black Report (1980) found class gaps in death rates in Britain despite free care since 1948."], "conclusion": "Closing health gaps takes housing, income, and clean environments, not only clinics."}]}}};
+  start(SAMPLE, { email: "Demo visitor", id: "demo" });
+})();
+</script>
+</body>
+</html>
